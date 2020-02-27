@@ -1,0 +1,37 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+
+class Kullanici {
+  
+  final String id;
+  final String kullaniciAdi;
+  final String fotoUrl;
+  final String email;
+  final String bio;
+
+  Kullanici({@required this.id, this.kullaniciAdi, this.fotoUrl, this.email,  this.bio});
+
+
+  factory Kullanici.firebasedenUret(FirebaseUser kullanici) {
+    return Kullanici(
+      id: kullanici.uid,
+      kullaniciAdi: kullanici.displayName,
+      fotoUrl: kullanici.photoUrl,
+      email: kullanici.email,
+    );
+  }
+
+
+  factory Kullanici.dokumandanUret(DocumentSnapshot doc) {
+    return Kullanici(
+      id : doc['id'],
+      kullaniciAdi: doc['username'],
+      email: doc['email'],
+      fotoUrl: doc['photoUrl'],
+      bio: doc['bio'],
+    );
+  }
+
+
+}
