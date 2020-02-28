@@ -24,6 +24,7 @@ class _ProfilState extends State<Profil> {
               CircleAvatar(
                 backgroundColor: Colors.grey,
                 radius: 50.0,
+                backgroundImage: AssetImage("kullanici.png"),
               ),
               Expanded(
                   child: Column(
