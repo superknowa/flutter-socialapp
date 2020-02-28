@@ -22,9 +22,10 @@ class _ProfilState extends State<Profil> {
           Row(
             children: <Widget>[
               CircleAvatar(
-                backgroundColor: Colors.grey,
+                backgroundColor: Colors.grey[300],
                 radius: 50.0,
-                backgroundImage: AssetImage("kullanici.png"),
+                backgroundImage: profilData.fotoUrl.isNotEmpty ? CachedNetworkImageProvider(profilData.fotoUrl) : AssetImage("assets/male.png")
+
               ),
               Expanded(
                   child: Column(
@@ -47,7 +48,7 @@ class _ProfilState extends State<Profil> {
           Container(
               alignment: Alignment.centerLeft,
               child: Text(
-                "Hamdi Genco",
+                profilData.kullaniciAdi,
                 style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
               )),
           SizedBox(
@@ -56,7 +57,7 @@ class _ProfilState extends State<Profil> {
           Container(
               alignment: Alignment.centerLeft,
               child: Text(
-                "Reklam ve iş birlikleri için dm atmanız yeter de artar.",
+                profilData.bio,
               )),
           SizedBox(
             height: 25.0,
