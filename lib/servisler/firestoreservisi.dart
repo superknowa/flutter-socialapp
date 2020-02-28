@@ -17,7 +17,7 @@ class FireStoreServisi {
   }
 
 
-  Future<void> kullaniciGetir({id}) async {
+  Future<Kullanici> kullaniciGetir({id}) async {
     DocumentSnapshot doc = await _firestore.collection("kullanicilar").document(id).get();
     Kullanici kullanici = Kullanici.dokumandanUret(doc);
     return kullanici;

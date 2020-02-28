@@ -30,6 +30,12 @@ class _AnaSayfaState extends State<AnaSayfa> {
   }
 
   @override
+  void dispose() {
+    pageViewController.dispose();
+    super.dispose();
+  }
+ 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: PageView(
@@ -45,7 +51,7 @@ class _AnaSayfaState extends State<AnaSayfa> {
         Kesfet(),
         Yukle(),
         Duyurular(),
-        Profil(profilSahibi: widget.aktifKullanici.id,aktifKullanici: widget.aktifKullanici.id,)
+        Profil(profilSahibiId: widget.aktifKullanici.id,aktifKullaniciId: widget.aktifKullanici.id,)
         ],
       ),
         bottomNavigationBar: BottomNavigationBar(

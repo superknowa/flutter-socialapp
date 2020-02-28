@@ -1,20 +1,20 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:socialapp/modeller/kullanici.dart';
+import 'package:socialapp/servisler/firestoreservisi.dart';
 
 class Profil extends StatefulWidget {
+  final String profilSahibiId;
+  final String aktifKullaniciId;
 
-  final String profilSahibi;
-  final String aktifKullanici;
-
-  Profil({this.profilSahibi, this.aktifKullanici});
-
+  Profil({this.profilSahibiId, this.aktifKullaniciId});
 
   @override
   _ProfilState createState() => _ProfilState();
 }
 
 class _ProfilState extends State<Profil> {
-
-  Widget _profilDetaylari(){
+  Widget _profilDetaylari(Kullanici profilData) {
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Column(
@@ -26,81 +26,108 @@ class _ProfilState extends State<Profil> {
                 radius: 50.0,
               ),
               Expanded(
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                      _profilSayac(baslik: "Gönderiler",sayi:35),
-                      _profilSayac(baslik: "Takipçi",sayi:958),
-                      _profilSayac(baslik: "Takip",sayi:125),
-                    ],)
-                  ],
-                )
-                )
+                  child: Column(
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      _profilSayac(baslik: "Gönderiler", sayi: 35),
+                      _profilSayac(baslik: "Takipçi", sayi: 958),
+                      _profilSayac(baslik: "Takip", sayi: 125),
+                    ],
+                  )
+                ],
+              ))
             ],
           ),
-          SizedBox(height: 10.0,),
+          SizedBox(
+            height: 10.0,
+          ),
           Container(
-            alignment: Alignment.centerLeft,
-            child: Text("Hamdi Genco",style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold),)
-            ),
-            SizedBox(height: 5.0,),
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Hamdi Genco",
+                style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
+              )),
+          SizedBox(
+            height: 5.0,
+          ),
           Container(
-            alignment: Alignment.centerLeft,
-            child: Text("Reklam ve iş birlikleri için dm atmanız yeter de artar.",)
-            ),
-            SizedBox(height: 25.0,),
-            _profilButon()
-            
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Reklam ve iş birlikleri için dm atmanız yeter de artar.",
+              )),
+          SizedBox(
+            height: 25.0,
+          ),
+          _profilButon()
         ],
       ),
     );
   }
 
-  Widget _profilButon(){
+  Widget _profilButon() {
     return Container(
       alignment: Alignment.center,
       width: double.infinity,
       height: 34.0,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5.0),
-        border: Border.all(width: 1.0,color: Colors.grey[300]),
+        border: Border.all(width: 1.0, color: Colors.grey[300]),
         color: Colors.white54,
       ),
-      child: Text("Profili Düzenle",style: TextStyle(fontWeight: FontWeight.bold),),
-
+      child: Text(
+        "Profili Düzenle",
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
     );
   }
 
-  Widget _profilSayac({String baslik,int sayi}){
+  Widget _profilSayac({String baslik, int sayi}) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        Text(sayi.toString(),style: TextStyle(fontSize: 20.0,fontWeight: FontWeight.bold),),
-        SizedBox(height:2.0),
-        Text(baslik,style: TextStyle(fontSize: 15.0),),
+        Text(
+          sayi.toString(),
+          style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 2.0),
+        Text(
+          baslik,
+          style: TextStyle(fontSize: 15.0),
+        ),
       ],
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Profil",style: TextStyle(color: Colors.black),),
-        backgroundColor: Colors.grey[100],
-        actions: <Widget>[
-          IconButton(icon: Icon(Icons.exit_to_app), onPressed: null)
-        ],
-        ),
-        body:ListView(
-          children: <Widget>[
-            _profilDetaylari()
+        appBar: AppBar(
+          title: Text(
+            "Profil",
+            style: TextStyle(color: Colors.black),
+          ),
+          backgroundColor: Colors.grey[100],
+          actions: <Widget>[
+            IconButton(icon: Icon(Icons.exit_to_app), onPressed: null)
           ],
-        )
-    );
+        ),
+        body: FutureBuilder<Kullanici>(//Editör tamamlama yapabilsin diye Kullanici tipini tanımladım.
+          future: FireStoreServisi().kullaniciGetir(id:widget.profilSahibiId),
+          builder: (context, snapshot) {
+          
+          if (!snapshot.hasData) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          return ListView(
+            children: <Widget>[
+              _profilDetaylari(snapshot.data)
+              ],
+          );
+
+        }));
   }
 }
