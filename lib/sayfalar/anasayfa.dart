@@ -10,8 +10,7 @@ import 'package:socialapp/servisler/yetkilendirmeservisi.dart';
 class AnaSayfa extends StatefulWidget {
 
   final Kullanici aktifKullanici;
-
-  const AnaSayfa({this.aktifKullanici});
+  AnaSayfa({this.aktifKullanici});
 
 
   @override
@@ -46,7 +45,7 @@ class _AnaSayfaState extends State<AnaSayfa> {
         Kesfet(),
         Yukle(),
         Duyurular(),
-        Profil(profilSahibi: widget.aktifKullanici,aktifKullanici: widget.aktifKullanici,)
+        Profil(profilSahibi: widget.aktifKullanici.id,aktifKullanici: widget.aktifKullanici.id,)
         ],
       ),
         bottomNavigationBar: BottomNavigationBar(
