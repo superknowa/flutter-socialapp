@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:socialapp/modeller/kullanici.dart';
 import 'package:socialapp/sayfalar/akis.dart';
 import 'package:socialapp/sayfalar/duyurular.dart';
 import 'package:socialapp/sayfalar/kesfet.dart';
@@ -7,30 +8,47 @@ import 'package:socialapp/sayfalar/yukle.dart';
 import 'package:socialapp/servisler/yetkilendirmeservisi.dart';
 
 class AnaSayfa extends StatefulWidget {
+
+  final Kullanici aktifKullanici;
+
+  const AnaSayfa({this.aktifKullanici});
+
+
   @override
   _AnaSayfaState createState() => _AnaSayfaState();
 }
 
 class _AnaSayfaState extends State<AnaSayfa> {
   int _aktifSayfaNo = 0;
-  List<Widget> _sayfalar = [];
+  PageController pageViewController;
 
   @override
   void initState() {
     super.initState();
 
-    _sayfalar = [
-        Akis(),
-        Kesfet(),
-        Yukle(),
-        Duyurular(),
-        Profil(),];
+    pageViewController = PageController();
+    
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _sayfalar[_aktifSayfaNo],
+      body: PageView(
+        controller: pageViewController,
+        physics: NeverScrollableScrollPhysics(),
+        onPageChanged: (sayfa){
+          setState(() {
+            _aktifSayfaNo = sayfa;
+          });
+        },
+        children: <Widget>[
+        Akis(),
+        Kesfet(),
+        Yukle(),
+        Duyurular(),
+        Profil(profilSahibi: widget.aktifKullanici,aktifKullanici: widget.aktifKullanici,)
+        ],
+      ),
         bottomNavigationBar: BottomNavigationBar(
         currentIndex: _aktifSayfaNo,
         selectedItemColor: Theme.of(context).primaryColor,
@@ -64,7 +82,7 @@ class _AnaSayfaState extends State<AnaSayfa> {
         ],
         onTap: (secilenSayfaNo) {
           setState(() {
-          _aktifSayfaNo = secilenSayfaNo;
+           pageViewController.jumpToPage(secilenSayfaNo);
         });
         },
       ),

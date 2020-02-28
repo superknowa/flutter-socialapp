@@ -23,9 +23,9 @@ class Yonlendirme extends StatelessWidget {
           }
 
           if (snapshot.hasData) {
-            Kullanici aktifkullanici = snapshot.data;
+            Kullanici kullanici = snapshot.data;
 
-            return AnaSayfa();
+            return AnaSayfa(aktifKullanici: kullanici,);
           } else {
             return GirisSayfasi();
           }

@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 class Profil extends StatefulWidget {
 
   final profilSahibi;
+  final aktifKullanici;
 
-  Profil({this.profilSahibi});
+  Profil({this.profilSahibi, this.aktifKullanici});
+
+  
 
 
   @override
