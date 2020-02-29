@@ -17,10 +17,21 @@ class FireStoreServisi {
   }
 
 
-  Future<Kullanici> kullaniciGetir({id}) async {
+  Future<Kullanici> kullaniciGetir(id) async {
     DocumentSnapshot doc = await _firestore.collection("kullanicilar").document(id).get();
     Kullanici kullanici = Kullanici.dokumandanUret(doc);
     return kullanici;
+  }
+
+
+  Future<int> takipciSayisi(id) async {
+   QuerySnapshot  snapshot = await _firestore.collection("takipciler").document(id).collection("kullanicininTakipcileri").getDocuments();
+   return snapshot.documents.length;
+  }
+
+  Future<int> takipEdileniSayisi(id) async {
+   QuerySnapshot  snapshot = await _firestore.collection("takipedilenler").document(id).collection("kullanicininTakipleri").getDocuments();
+   return snapshot.documents.length;
   }
 
 

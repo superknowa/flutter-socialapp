@@ -14,6 +14,32 @@ class Profil extends StatefulWidget {
 }
 
 class _ProfilState extends State<Profil> {
+
+  int gonderiSayisi = 0;
+  int takipci = 0;
+  int takipEdilen = 0;
+
+  _takipciSayisiGetir() async {
+    final takipciSayisi = await FireStoreServisi().takipciSayisi(widget.profilSahibiId);
+    setState(() {
+      takipci = takipciSayisi;
+    });
+  }
+
+  _takipEdilenSayisiGetir() async {
+    final takipEdilenSayisi = await FireStoreServisi().takipEdileniSayisi(widget.profilSahibiId);
+    setState(() {
+      takipEdilen = takipEdilenSayisi;
+    });
+  }
+
+  @override
+  void initState() { 
+    super.initState();
+    _takipciSayisiGetir();
+    _takipEdilenSayisiGetir();
+  }
+
   Widget _profilDetaylari(Kullanici profilData) {
     return Padding(
       padding: const EdgeInsets.all(15.0),
@@ -33,9 +59,9 @@ class _ProfilState extends State<Profil> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      _profilSayac(baslik: "Gönderiler", sayi: 35),
-                      _profilSayac(baslik: "Takipçi", sayi: 958),
-                      _profilSayac(baslik: "Takip", sayi: 125),
+                      _profilSayac(baslik: "Gönderiler", sayi: gonderiSayisi),
+                      _profilSayac(baslik: "Takipçi", sayi: takipci),
+                      _profilSayac(baslik: "Takip", sayi: takipEdilen),
                     ],
                   )
                 ],
@@ -117,7 +143,7 @@ class _ProfilState extends State<Profil> {
           ],
         ),
         body: FutureBuilder<Kullanici>(//Editör tamamlama yapabilsin diye Kullanici tipini tanımladım.
-          future: FireStoreServisi().kullaniciGetir(id:widget.profilSahibiId),
+          future: FireStoreServisi().kullaniciGetir(widget.profilSahibiId),
           builder: (context, snapshot) {
           
           if (!snapshot.hasData) {
