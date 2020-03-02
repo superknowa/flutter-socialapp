@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:socialapp/servisler/storageservisi.dart';
 
 class Yukle extends StatefulWidget {
   @override
@@ -85,17 +86,18 @@ class _YukleState extends State<Yukle> {
     );
   }
 
-  gonderiOlustur(){
+  gonderiOlustur() async {
 
-    print(aciklamaTextKumandasi.text);
-    print(konumTextKumandasi.text);
+   String resimUrl = await StorageServisi().gonderiResmiYukle(dosya);
+   print("Yüklenen Resim Url: $resimUrl");
+
   }
 
 
   fotoCek() async {
     Navigator.pop(context);
     var image = await ImagePicker.pickImage(
-        source: ImageSource.camera, maxWidth: 800, maxHeight: 600);
+        source: ImageSource.camera, maxWidth: 800, maxHeight: 600 , imageQuality: 80);
     setState(() {
       dosya = image;
     });
@@ -104,7 +106,7 @@ class _YukleState extends State<Yukle> {
   galeridenSec() async {
     Navigator.pop(context);
     var image = await ImagePicker.pickImage(
-        source: ImageSource.gallery, maxWidth: 800, maxHeight: 600);
+        source: ImageSource.gallery, maxWidth: 800, maxHeight: 600, imageQuality: 80);
     setState(() {
       dosya = image;
     });
