@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:socialapp/modeller/kullanici.dart';
 import 'package:socialapp/servisler/firestoreservisi.dart';
+import 'package:socialapp/servisler/yetkilendirmeservisi.dart';
 
 class Profil extends StatefulWidget {
   final String profilSahibiId;
@@ -129,6 +131,10 @@ class _ProfilState extends State<Profil> {
     );
   }
 
+  cikisYap(){
+    Provider.of<YetkilendirmeServisi>(context, listen: false).cikisYap();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -139,7 +145,7 @@ class _ProfilState extends State<Profil> {
           ),
           backgroundColor: Colors.grey[100],
           actions: <Widget>[
-            IconButton(icon: Icon(Icons.exit_to_app), onPressed: null)
+            IconButton(icon: Icon(Icons.exit_to_app), onPressed: cikisYap)
           ],
         ),
         body: FutureBuilder<Kullanici>(//Editör tamamlama yapabilsin diye Kullanici tipini tanımladım.
