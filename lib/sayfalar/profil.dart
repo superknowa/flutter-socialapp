@@ -145,7 +145,7 @@ class _ProfilState extends State<Profil> {
           ),
           backgroundColor: Colors.grey[100],
           actions: <Widget>[
-            IconButton(icon: Icon(Icons.exit_to_app), onPressed: cikisYap)
+            IconButton(icon: Icon(Icons.exit_to_app,color: Colors.black,), onPressed: cikisYap)
           ],
         ),
         body: FutureBuilder<Kullanici>(//Editör tamamlama yapabilsin diye Kullanici tipini tanımladım.

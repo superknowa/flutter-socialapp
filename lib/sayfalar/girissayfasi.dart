@@ -126,7 +126,6 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
             alignment: Alignment.center,
             width: double.infinity,
             height: 40.0,
-            color: Colors.white,
             child: GestureDetector(
               onTap: _googleIleGiris,
               child: Text(
