@@ -153,6 +153,7 @@ class _ProfilState extends State<Profil> {
 
       return ListView.builder(
         shrinkWrap: true,
+        primary: false,
         itemCount: _gonderiler.length,
         itemBuilder: (context, index){
           return GonderiKart();
