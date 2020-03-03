@@ -28,7 +28,7 @@ class Yonlendirme extends StatelessWidget {
             //Kullanıcı idsine program içinde heryerden ulaşabilmemi sağlar.
             _yetkilendirmeServisi.aktifKullaniciId = kullanici.id;
 
-            return AnaSayfa(aktifKullanici: kullanici,);
+            return AnaSayfa();
           } else {
             return GirisSayfasi();
           }

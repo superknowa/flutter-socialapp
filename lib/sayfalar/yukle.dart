@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:socialapp/servisler/firestoreservisi.dart';
 import 'package:socialapp/servisler/storageservisi.dart';
 import 'package:socialapp/servisler/yetkilendirmeservisi.dart';
 
@@ -90,11 +91,29 @@ class _YukleState extends State<Yukle> {
 
   gonderiOlustur() async {
 
-   String resimUrl = await StorageServisi().gonderiResmiYukle(dosya);
-   print("Yüklenen Resim Url: $resimUrl");
+   if(!yukleniyor){
 
-   String aktifKullaniciId=Provider.of<YetkilendirmeServisi>(context, listen: false).aktifKullaniciId;
-   print("Kullanıcı id $aktifKullaniciId");
+
+   setState(() {
+     yukleniyor = true;
+   });
+
+   String resimUrl = await StorageServisi().gonderiResmiYukle(dosya);
+
+   String aktifKullaniciId = Provider.of<YetkilendirmeServisi>(context, listen: false).aktifKullaniciId;
+   await FireStoreServisi().gonderiOlustur(gonderResimiUrl: resimUrl, aciklama: aciklamaTextKumandasi.text,yayinlayanId: aktifKullaniciId,konum: konumTextKumandasi.text );
+    
+   setState(() {
+     yukleniyor = false;
+     aciklamaTextKumandasi.clear();
+     konumTextKumandasi.clear();
+     dosya = null;
+   }); 
+
+    
+
+   }
+
 
   }
 

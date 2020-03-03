@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:socialapp/modeller/kullanici.dart';
 import 'package:socialapp/sayfalar/akis.dart';
 import 'package:socialapp/sayfalar/duyurular.dart';
@@ -8,9 +9,6 @@ import 'package:socialapp/sayfalar/yukle.dart';
 import 'package:socialapp/servisler/yetkilendirmeservisi.dart';
 
 class AnaSayfa extends StatefulWidget {
-
-  final Kullanici aktifKullanici;
-  AnaSayfa({this.aktifKullanici});
 
 
   @override
@@ -37,6 +35,9 @@ class _AnaSayfaState extends State<AnaSayfa> {
  
   @override
   Widget build(BuildContext context) {
+
+    String aktifKullaniciId = Provider.of<YetkilendirmeServisi>(context, listen: false).aktifKullaniciId;
+
     return Scaffold(
       body: PageView(
         controller: pageViewController,
@@ -51,7 +52,7 @@ class _AnaSayfaState extends State<AnaSayfa> {
         Kesfet(),
         Yukle(),
         Duyurular(),
-        Profil(profilSahibiId: widget.aktifKullanici.id,aktifKullaniciId: widget.aktifKullanici.id,)
+        Profil(profilSahibiId: aktifKullaniciId,aktifKullaniciId: aktifKullaniciId)
         ],
       ),
         bottomNavigationBar: BottomNavigationBar(

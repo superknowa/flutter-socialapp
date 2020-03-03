@@ -187,7 +187,13 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
     try {
       Kullanici kullanici = await _yetkilendirmeServisi.googleIleGiris();
       if(kullanici != null){
-        FireStoreServisi().kullaniciOlustur(id: kullanici.id,kullaniciAdi: kullanici.kullaniciAdi, email: kullanici.email, fotoUrl: kullanici.fotoUrl );
+
+        Kullanici firestoreKullanici = await FireStoreServisi().kullaniciGetir(kullanici.id);
+
+        if(firestoreKullanici==null){
+          FireStoreServisi().kullaniciOlustur(id: kullanici.id,kullaniciAdi: kullanici.kullaniciAdi, email: kullanici.email, fotoUrl: kullanici.fotoUrl );
+        }
+
       }
     } catch (err) {
       setState(() {

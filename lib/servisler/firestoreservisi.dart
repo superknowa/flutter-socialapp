@@ -42,17 +42,21 @@ class FireStoreServisi {
   }
 
 
-  Future<String> gonderiOlustur({gonderResimiUrl, aciklama, yayinlayanId, kullaniciAdi,begeniSayisi,konum}) async {
-  DocumentReference doc = await _firestore.collection("gonderiler").document(yayinlayanId).collection("kullaniciGonderileri").add({
-      "gonderResimiUrl" : gonderResimiUrl,
-      "aciklama" : aciklama,
-      "yayinlayanId" : yayinlayanId,
-      "kullaniciAdi" : kullaniciAdi,
-      "begeniSayisi" : begeniSayisi,
-      "konum" : konum,
-    });
+  Future<void> gonderiOlustur({gonderResimiUrl, aciklama, yayinlayanId,konum}) async {
 
-  return doc.documentID;
+ 
+    Kullanici firestoreKulllanici= await kullaniciGetir(yayinlayanId);
+    
+
+    DocumentReference doc = await _firestore.collection("gonderiler").document(yayinlayanId).collection("kullaniciGonderileri").add({
+        "gonderResimiUrl" : gonderResimiUrl,
+        "aciklama" : aciklama,
+        "yayinlayanId" : yayinlayanId,
+        "kullaniciAdi" : firestoreKulllanici.kullaniciAdi,
+        "begeniSayisi" : 0,
+        "konum" : konum,
+      });
+
 
   }
 
