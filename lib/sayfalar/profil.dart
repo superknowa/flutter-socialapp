@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:socialapp/modeller/gonderi.dart';
 import 'package:socialapp/modeller/kullanici.dart';
 import 'package:socialapp/servisler/firestoreservisi.dart';
 import 'package:socialapp/servisler/yetkilendirmeservisi.dart';
@@ -20,6 +21,7 @@ class _ProfilState extends State<Profil> {
   int gonderiSayisi = 0;
   int takipci = 0;
   int takipEdilen = 0;
+  List<Gonderi> _gonderiler = [];
 
   _takipciSayisiGetir() async {
     final takipciSayisi = await FireStoreServisi().takipciSayisi(widget.profilSahibiId);
@@ -35,11 +37,24 @@ class _ProfilState extends State<Profil> {
     });
   }
 
+
+  _gonderileriGetir() async {
+
+    List<Gonderi> gonderiler = await FireStoreServisi().gonderileriGetir(widget.profilSahibiId);
+    print("Gönderi sayısı: ${gonderiler.length}");
+    setState(() {
+      _gonderiler = gonderiler;
+      gonderiSayisi = _gonderiler.length;
+    });
+
+  }
+
   @override
   void initState() { 
     super.initState();
     _takipciSayisiGetir();
     _takipEdilenSayisiGetir();
+    _gonderileriGetir();
   }
 
   Widget _profilDetaylari(Kullanici profilData) {

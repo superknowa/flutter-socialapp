@@ -7,7 +7,7 @@ class Gonderi {
   final String aciklama;
   final String yayinlayanId;
   final String kullaniciAdi;
-  final String begeniSayisi;
+  final int begeniSayisi;
   final String konum;
   final Timestamp timestamp;
 
