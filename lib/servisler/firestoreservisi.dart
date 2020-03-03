@@ -49,9 +49,8 @@ class FireStoreServisi {
 
   Future<void> gonderiOlustur(
       {gonderResimiUrl, aciklama, yayinlayanId, konum}) async {
-    Kullanici firestoreKulllanici = await kullaniciGetir(yayinlayanId);
 
-    DocumentReference doc = await _firestore
+    await _firestore
         .collection("gonderiler")
         .document(yayinlayanId)
         .collection("kullaniciGonderileri")
@@ -59,7 +58,6 @@ class FireStoreServisi {
       "gonderResimiUrl": gonderResimiUrl,
       "aciklama": aciklama,
       "yayinlayanId": yayinlayanId,
-      "kullaniciAdi": firestoreKulllanici.kullaniciAdi,
       "begeniSayisi": 0,
       "konum": konum,
     });
