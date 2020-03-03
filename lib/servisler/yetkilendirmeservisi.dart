@@ -4,6 +4,7 @@ import 'package:socialapp/modeller/kullanici.dart';
 
 class YetkilendirmeServisi {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  String aktifKullaniciId;
 
   //Bunu private yaptım çünkü dışarıdan çağırılmayacak sadece sınıf elemanları kullanacak.
   Kullanici _kullaniciOlustur(FirebaseUser kullanici) {

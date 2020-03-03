@@ -19,8 +19,15 @@ class FireStoreServisi {
 
   Future<Kullanici> kullaniciGetir(id) async {
     DocumentSnapshot doc = await _firestore.collection("kullanicilar").document(id).get();
-    Kullanici kullanici = Kullanici.dokumandanUret(doc);
+
+    if(doc.exists){
+      Kullanici kullanici = Kullanici.dokumandanUret(doc);
     return kullanici;
+    }
+
+    return null;
+
+    
   }
 
 
@@ -32,6 +39,21 @@ class FireStoreServisi {
   Future<int> takipEdileniSayisi(id) async {
    QuerySnapshot  snapshot = await _firestore.collection("takipedilenler").document(id).collection("kullanicininTakipleri").getDocuments();
    return snapshot.documents.length;
+  }
+
+
+  Future<String> gonderiOlustur({gonderResimiUrl, aciklama, yayinlayanId, kullaniciAdi,begeniSayisi,konum}) async {
+  DocumentReference doc = await _firestore.collection("gonderiler").document(yayinlayanId).collection("kullaniciGonderileri").add({
+      "gonderResimiUrl" : gonderResimiUrl,
+      "aciklama" : aciklama,
+      "yayinlayanId" : yayinlayanId,
+      "kullaniciAdi" : kullaniciAdi,
+      "begeniSayisi" : begeniSayisi,
+      "konum" : konum,
+    });
+
+  return doc.documentID;
+
   }
 
 

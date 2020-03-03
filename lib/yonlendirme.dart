@@ -24,6 +24,9 @@ class Yonlendirme extends StatelessWidget {
 
           if (snapshot.hasData) {
             Kullanici kullanici = snapshot.data;
+            
+            //Kullanıcı idsine program içinde heryerden ulaşabilmemi sağlar.
+            _yetkilendirmeServisi.aktifKullaniciId = kullanici.id;
 
             return AnaSayfa(aktifKullanici: kullanici,);
           } else {
