@@ -17,40 +17,39 @@ class Profil extends StatefulWidget {
 }
 
 class _ProfilState extends State<Profil> {
-
   int gonderiSayisi = 0;
   int takipci = 0;
   int takipEdilen = 0;
   List<Gonderi> _gonderiler = [];
 
   _takipciSayisiGetir() async {
-    final takipciSayisi = await FireStoreServisi().takipciSayisi(widget.profilSahibiId);
+    final takipciSayisi =
+        await FireStoreServisi().takipciSayisi(widget.profilSahibiId);
     setState(() {
       takipci = takipciSayisi;
     });
   }
 
   _takipEdilenSayisiGetir() async {
-    final takipEdilenSayisi = await FireStoreServisi().takipEdileniSayisi(widget.profilSahibiId);
+    final takipEdilenSayisi =
+        await FireStoreServisi().takipEdileniSayisi(widget.profilSahibiId);
     setState(() {
       takipEdilen = takipEdilenSayisi;
     });
   }
 
-
   _gonderileriGetir() async {
-
-    List<Gonderi> gonderiler = await FireStoreServisi().gonderileriGetir(widget.profilSahibiId);
+    List<Gonderi> gonderiler =
+        await FireStoreServisi().gonderileriGetir(widget.profilSahibiId);
     print("Gönderi sayısı: ${gonderiler.length}");
     setState(() {
       _gonderiler = gonderiler;
       gonderiSayisi = _gonderiler.length;
     });
-
   }
 
   @override
-  void initState() { 
+  void initState() {
     super.initState();
     _takipciSayisiGetir();
     _takipEdilenSayisiGetir();
@@ -65,11 +64,11 @@ class _ProfilState extends State<Profil> {
           Row(
             children: <Widget>[
               CircleAvatar(
-                backgroundColor: Colors.grey[300],
-                radius: 50.0,
-                backgroundImage: profilData.fotoUrl.isNotEmpty ? CachedNetworkImageProvider(profilData.fotoUrl) : AssetImage("assets/male.png")
-
-              ),
+                  backgroundColor: Colors.grey[300],
+                  radius: 50.0,
+                  backgroundImage: profilData.fotoUrl.isNotEmpty
+                      ? CachedNetworkImageProvider(profilData.fotoUrl)
+                      : AssetImage("assets/male.png")),
               Expanded(
                   child: Column(
                 children: <Widget>[
@@ -146,7 +145,39 @@ class _ProfilState extends State<Profil> {
     );
   }
 
-  cikisYap(){
+  Widget _gonderileriGoster() {
+
+    List<GridTile> fayanslar = [];
+    _gonderiler.forEach((gonderi){
+
+      fayanslar.add(_fayansOlustur(gonderi));
+
+    });
+    
+
+    return GridView.count(
+      crossAxisCount: 3,
+      shrinkWrap: true,
+      mainAxisSpacing: 2.0,
+      crossAxisSpacing: 2.0,
+      childAspectRatio: 1.0,
+      physics: NeverScrollableScrollPhysics(),
+      children: fayanslar,
+    );
+  }
+
+  GridTile _fayansOlustur(gonderi){
+    
+    return GridTile(
+            child: Image(
+          image: CachedNetworkImageProvider(gonderi.gonderResimiUrl),
+          fit: BoxFit.cover,
+        ),
+    );
+  
+  }
+
+  cikisYap() {
     Provider.of<YetkilendirmeServisi>(context, listen: false).cikisYap();
   }
 
@@ -160,23 +191,28 @@ class _ProfilState extends State<Profil> {
           ),
           backgroundColor: Colors.grey[100],
           actions: <Widget>[
-            IconButton(icon: Icon(Icons.exit_to_app,color: Colors.black,), onPressed: cikisYap)
+            IconButton(
+                icon: Icon(
+                  Icons.exit_to_app,
+                  color: Colors.black,
+                ),
+                onPressed: cikisYap)
           ],
         ),
-        body: FutureBuilder<Kullanici>(//Editör tamamlama yapabilsin diye Kullanici tipini tanımladım.
-          future: FireStoreServisi().kullaniciGetir(widget.profilSahibiId),
-          builder: (context, snapshot) {
-          
-          if (!snapshot.hasData) {
-            return Center(child: CircularProgressIndicator());
-          }
+        body: FutureBuilder<Kullanici>(
+            //Editör tamamlama yapabilsin diye Kullanici tipini tanımladım.
+            future: FireStoreServisi().kullaniciGetir(widget.profilSahibiId),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Center(child: CircularProgressIndicator());
+              }
 
-          return ListView(
-            children: <Widget>[
-              _profilDetaylari(snapshot.data)
-              ],
-          );
-
-        }));
+              return ListView(
+                children: <Widget>[
+                  _profilDetaylari(snapshot.data),
+                  _gonderileriGoster(),
+                ],
+              );
+            }));
   }
 }
