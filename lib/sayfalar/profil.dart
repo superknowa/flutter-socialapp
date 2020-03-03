@@ -5,6 +5,7 @@ import 'package:socialapp/modeller/gonderi.dart';
 import 'package:socialapp/modeller/kullanici.dart';
 import 'package:socialapp/servisler/firestoreservisi.dart';
 import 'package:socialapp/servisler/yetkilendirmeservisi.dart';
+import 'package:socialapp/widgetlar/gonderikarti.dart';
 
 class Profil extends StatefulWidget {
   final String profilSahibiId;
@@ -21,6 +22,7 @@ class _ProfilState extends State<Profil> {
   int takipci = 0;
   int takipEdilen = 0;
   List<Gonderi> _gonderiler = [];
+  String gonderiStili = "liste";
 
   _takipciSayisiGetir() async {
     final takipciSayisi =
@@ -147,23 +149,40 @@ class _ProfilState extends State<Profil> {
 
   Widget _gonderileriGoster() {
 
-    List<GridTile> fayanslar = [];
-    _gonderiler.forEach((gonderi){
+    if(gonderiStili == "liste"){
 
-      fayanslar.add(_fayansOlustur(gonderi));
+      return ListView.builder(
+        shrinkWrap: true,
+        itemCount: _gonderiler.length,
+        itemBuilder: (context, index){
+          return GonderiKart();
+        }
+        );
 
-    });
-    
+    } else {
 
-    return GridView.count(
-      crossAxisCount: 3,
-      shrinkWrap: true,
-      mainAxisSpacing: 2.0,
-      crossAxisSpacing: 2.0,
-      childAspectRatio: 1.0,
-      physics: NeverScrollableScrollPhysics(),
-      children: fayanslar,
-    );
+
+      List<GridTile> fayanslar = [];
+      _gonderiler.forEach((gonderi){
+
+        fayanslar.add(_fayansOlustur(gonderi));
+
+      });
+      
+      return GridView.count(
+        crossAxisCount: 3,
+        shrinkWrap: true,
+        mainAxisSpacing: 2.0,
+        crossAxisSpacing: 2.0,
+        childAspectRatio: 1.0,
+        physics: NeverScrollableScrollPhysics(),
+        children: fayanslar,
+      );
+
+
+  }
+
+
   }
 
   GridTile _fayansOlustur(gonderi){
