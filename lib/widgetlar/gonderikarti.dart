@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:socialapp/modeller/gonderi.dart';
+import 'package:socialapp/modeller/kullanici.dart';
 
 class GonderiKart extends StatefulWidget {
   final Gonderi gonderi;
+  final Kullanici yayinlayan;
 
-  const GonderiKart({this.gonderi});
+  const GonderiKart({this.gonderi, this.yayinlayan});
+
 
   @override
   _GonderiKartState createState() => _GonderiKartState();
@@ -20,7 +23,7 @@ class _GonderiKartState extends State<GonderiKart> {
         ),
       ),
       title: Text(
-        "Kullanıcı Adı",
+        widget.yayinlayan.kullaniciAdi,
         style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
       ),
       trailing: IconButton(

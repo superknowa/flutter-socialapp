@@ -147,7 +147,7 @@ class _ProfilState extends State<Profil> {
     );
   }
 
-  Widget _gonderileriGoster() {
+  Widget _gonderileriGoster(Kullanici profilData) {
 
     if(gonderiStili == "liste"){
 
@@ -156,7 +156,7 @@ class _ProfilState extends State<Profil> {
         primary: false, //Primary anlat
         itemCount: _gonderiler.length,
         itemBuilder: (context, index){
-          return GonderiKart();
+          return GonderiKart(yayinlayan: profilData ,gonderi:_gonderiler[index]);
         }
         );
 
@@ -226,11 +226,10 @@ class _ProfilState extends State<Profil> {
               if (!snapshot.hasData) {
                 return Center(child: CircularProgressIndicator());
               }
-
               return ListView(
                 children: <Widget>[
                   _profilDetaylari(snapshot.data),
-                  _gonderileriGoster(),
+                  _gonderileriGoster(snapshot.data),
                 ],
               );
             }));
