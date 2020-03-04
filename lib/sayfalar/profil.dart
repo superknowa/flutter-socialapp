@@ -152,8 +152,8 @@ class _ProfilState extends State<Profil> {
     if(gonderiStili == "liste"){
 
       return ListView.builder(
-        shrinkWrap: true,
-        primary: false,
+        shrinkWrap: true, //Anlat
+        primary: false, //Primary anlat
         itemCount: _gonderiler.length,
         itemBuilder: (context, index){
           return GonderiKart();
