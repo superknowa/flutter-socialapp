@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:socialapp/modeller/gonderi.dart';
 import 'package:socialapp/modeller/kullanici.dart';
@@ -14,12 +15,23 @@ class GonderiKart extends StatefulWidget {
 }
 
 class _GonderiKartState extends State<GonderiKart> {
+
+  int _begeniSayisi = 0;
+  bool _begendin = false;
+
+  @override
+  void initState() { 
+    super.initState();
+    _begeniSayisi = widget.gonderi.begeniSayisi;
+  }
+
   gonderiBasligi() {
     return ListTile(
       leading: Padding(
         padding: const EdgeInsets.only(left:12.0),
         child: CircleAvatar(
           backgroundColor: Colors.blue,
+          backgroundImage: CachedNetworkImageProvider(widget.yayinlayan.fotoUrl),
         ),
       ),
       title: Text(
@@ -50,11 +62,15 @@ class _GonderiKartState extends State<GonderiKart> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             IconButton(
-              icon: Icon(
+              icon: _begendin ? Icon(
+                Icons.favorite,
+                color: Colors.red,
+                size: 35.0,
+              ) :  Icon(
                 Icons.favorite_border,
                 size: 35.0,
               ),
-              onPressed: null,
+              onPressed: begeniDegistir,
             ),
             IconButton(
               icon: Icon(
@@ -68,14 +84,14 @@ class _GonderiKartState extends State<GonderiKart> {
         Padding(
           padding: const EdgeInsets.only(left: 8.0),
           child: Text(
-            "100 beğenİ,",
+            "$_begeniSayisi beğeni",
             style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
           ),
         ),
         SizedBox(
           height: 2.0,
         ),
-        Row(
+        widget.gonderi.aciklama.isNotEmpty ? Row(
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(
@@ -83,15 +99,33 @@ class _GonderiKartState extends State<GonderiKart> {
                 right: 8.0,
               ),
               child: Text(
-                "Kullanıcı Adı",
+                widget.yayinlayan.kullaniciAdi,
                 style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
               ),
             ),
-            Expanded(child: Text("Gonderi açıklaması buraya gelecek"))
+            Expanded(child: Text(widget.gonderi.aciklama))
           ],
-        )
+        ) : SizedBox(height: 0.0,)
       ],
     );
+  }
+
+
+  begeniDegistir(){
+    if(_begendin){
+      //Beğenmiş durumdasın, beğeniden çıkart
+      setState(() {
+        _begendin = false;
+        _begeniSayisi = _begeniSayisi  - 1;
+      });
+    } else {
+      
+      //Henüz beğenmemişsin, beğen
+      setState(() {
+        _begendin = true;
+        _begeniSayisi = _begeniSayisi  + 1;
+      });
+    }
   }
 
   @override
