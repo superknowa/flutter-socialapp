@@ -14,7 +14,7 @@ class Gonderi {
 
   factory Gonderi.dokumandanUret(DocumentSnapshot doc) {
     return Gonderi(
-      id : doc['id'],
+      id : doc.documentID, //Bu kısmı anlat
       gonderResimiUrl: doc['gonderResimiUrl'],
       aciklama: doc['aciklama'],
       yayinlayanId: doc['yayinlayanId'],

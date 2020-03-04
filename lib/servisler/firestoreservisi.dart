@@ -49,7 +49,6 @@ class FireStoreServisi {
 
   Future<void> gonderiOlustur(
       {gonderResimiUrl, aciklama, yayinlayanId, konum}) async {
-
     await _firestore
         .collection("gonderiler")
         .document(yayinlayanId)
@@ -73,6 +72,72 @@ class FireStoreServisi {
     List<Gonderi> gonderiler =
         snapshot.documents.map((doc) => Gonderi.dokumandanUret(doc)).toList();
     return gonderiler;
+  }
+
+  Future<void> gonderiBegen({String aktifKullaniciId, Gonderi gonderi}) async {
+    //Beğeni sayısını artır
+    
+    DocumentReference docRef = _firestore
+        .collection("gonderiler")
+        .document(gonderi.yayinlayanId)
+        .collection("kullaniciGonderileri")
+        .document(gonderi.id);
+
+    DocumentSnapshot doc = await docRef.get();
+
+    if (doc.exists) {
+      Gonderi gonderi = Gonderi.dokumandanUret(doc);
+      int yenibegeniSayisi = gonderi.begeniSayisi + 1;
+      docRef.updateData({"begeniSayisi":yenibegeniSayisi});
+      
+
+      //begeniler koleksiyonuna ekle
+      _firestore
+        .collection("begeniler")
+        .document(gonderi.id)
+        .collection("gonderiBegenileri")
+        .document(aktifKullaniciId)
+        .setData({});
+
+    }
+  }
+
+
+  Future<void> gonderiBegeniKaldir({String aktifKullaniciId, Gonderi gonderi}) async {
+    //Beğeni sayısını azalt
+    
+    DocumentReference docRef = _firestore
+        .collection("gonderiler")
+        .document(gonderi.yayinlayanId)
+        .collection("kullaniciGonderileri")
+        .document(gonderi.id);
+
+    DocumentSnapshot doc = await docRef.get();
+
+    if (doc.exists) {
+      Gonderi gonderi = Gonderi.dokumandanUret(doc);
+      int yenibegeniSayisi = gonderi.begeniSayisi - 1;
+      docRef.updateData({"begeniSayisi":yenibegeniSayisi});
+
+      DocumentSnapshot docBegeni = await _firestore
+        .collection("begeniler")
+        .document(gonderi.id)
+        .collection("gonderiBegenileri")
+        .document(aktifKullaniciId).get();
+
+      if(docBegeni.exists){
+        //Önce böyle bir kayıt olduğundan emin olduk. Sonra sildik.
+        docBegeni.reference.delete();
+      }
+        
+
+
+    }
+  }
+
+  begeniVar({String aktifKullaniciId, Gonderi gonderi}){
     
   }
+
+
 }

@@ -1,7 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:socialapp/modeller/gonderi.dart';
 import 'package:socialapp/modeller/kullanici.dart';
+import 'package:socialapp/servisler/firestoreservisi.dart';
+import 'package:socialapp/servisler/yetkilendirmeservisi.dart';
 
 class GonderiKart extends StatefulWidget {
   final Gonderi gonderi;
@@ -49,7 +52,11 @@ class _GonderiKartState extends State<GonderiKart> {
   gonderiResmi() {
     return Container(
       height: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(color: Colors.blue),
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: CachedNetworkImageProvider(widget.gonderi.gonderResimiUrl,
+          ),fit: BoxFit.cover,)
+      ),
     );
   }
 
@@ -112,12 +119,19 @@ class _GonderiKartState extends State<GonderiKart> {
 
 
   begeniDegistir(){
+
+    String aktifKullaniciId = Provider.of<YetkilendirmeServisi>(context, listen: false).aktifKullaniciId;
+
     if(_begendin){
       //Beğenmiş durumdasın, beğeniden çıkart
       setState(() {
         _begendin = false;
         _begeniSayisi = _begeniSayisi  - 1;
       });
+
+      FireStoreServisi().gonderiBegeniKaldir(aktifKullaniciId:aktifKullaniciId , gonderi:widget.gonderi);
+      
+
     } else {
       
       //Henüz beğenmemişsin, beğen
@@ -125,6 +139,7 @@ class _GonderiKartState extends State<GonderiKart> {
         _begendin = true;
         _begeniSayisi = _begeniSayisi  + 1;
       });
+      FireStoreServisi().gonderiBegen(aktifKullaniciId:aktifKullaniciId , gonderi:widget.gonderi);
     }
   }
 
