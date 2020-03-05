@@ -151,4 +151,17 @@ class FireStoreServisi {
   }
 
 
+  Stream<QuerySnapshot> yorumlariGetir(String gonderiId)  {
+  
+   return  _firestore
+    .collection("yorumlar")
+        .document(gonderiId)
+        .collection("gonderiYorumlari")
+        .orderBy('timestamp', descending: true)
+        .snapshots();
+        
+
+  }
+
+
 }

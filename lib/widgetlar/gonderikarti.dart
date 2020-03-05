@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:socialapp/modeller/gonderi.dart';
 import 'package:socialapp/modeller/kullanici.dart';
+import 'package:socialapp/sayfalar/yorumlar.dart';
 import 'package:socialapp/servisler/firestoreservisi.dart';
 import 'package:socialapp/servisler/yetkilendirmeservisi.dart';
 
@@ -105,7 +106,7 @@ class _GonderiKartState extends State<GonderiKart> {
                 Icons.comment,
                 size: 35.0,
               ),
-              onPressed: null,
+              onPressed: yorumlaraGit,
             )
           ],
         ),
@@ -138,6 +139,9 @@ class _GonderiKartState extends State<GonderiKart> {
     );
   }
 
+  yorumlaraGit(){
+    Navigator.push(context, MaterialPageRoute(builder: (context)=>Yorumlar(gonderi: widget.gonderi,)));
+  }
 
   begeniDegistir(){
 
