@@ -68,12 +68,15 @@ class _GonderiKartState extends State<GonderiKart> {
   }
 
   gonderiResmi() {
-    return Container(
-      height: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: CachedNetworkImageProvider(widget.gonderi.gonderResimiUrl,
-          ),fit: BoxFit.cover,)
+    return GestureDetector(
+      onDoubleTap: begeniDegistir,
+          child: Container(
+        height: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: CachedNetworkImageProvider(widget.gonderi.gonderResimiUrl,
+            ),fit: BoxFit.cover,)
+        ),
       ),
     );
   }
