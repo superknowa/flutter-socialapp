@@ -171,10 +171,10 @@ class FireStoreServisi {
         .collection("gonderiYorumlari")
         .add({
           "icerik":icerik,
-          "yayinlayanId":icerik,
-          "timestamp":icerik,
+          "yayinlayanId":aktifKullaniciId,
+          "timestamp":timestamp,
         });
-        
+
   }
 
 

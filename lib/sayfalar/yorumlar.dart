@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:socialapp/modeller/gonderi.dart';
 import 'package:socialapp/modeller/yorum.dart';
 import 'package:socialapp/servisler/firestoreservisi.dart';
+import 'package:socialapp/servisler/yetkilendirmeservisi.dart';
 
 class Yorumlar extends StatefulWidget {
 
@@ -14,6 +16,8 @@ Yorumlar({this.gonderi});
 }
 
 class _YorumlarState extends State<Yorumlar> {
+
+  TextEditingController _yorumKontrolcusu = TextEditingController();
 
   yorumlariGoster(){
     
@@ -40,13 +44,20 @@ class _YorumlarState extends State<Yorumlar> {
   yorumEkle(){
     return ListTile(
       title: TextFormField(
+        controller: _yorumKontrolcusu,
         decoration: InputDecoration(
           hintText: "Yorumu buraya yazın.",
           hintStyle: TextStyle(color: Colors.black)
         ),
       ),
-      trailing: IconButton(icon: Icon(Icons.send), onPressed: null),
+      trailing: IconButton(icon: Icon(Icons.send), onPressed: ()=>yorumGonder()), //farklı kullandım
     );
+  }
+
+  yorumGonder(){
+    String aktifKullaniciId = Provider.of<YetkilendirmeServisi>(context, listen: false).aktifKullaniciId;
+    FireStoreServisi().yorumEkle(aktifKullaniciId: aktifKullaniciId, gonderiId: widget.gonderi.id, icerik: _yorumKontrolcusu.text);
+    _yorumKontrolcusu.clear();
   }
 
 
