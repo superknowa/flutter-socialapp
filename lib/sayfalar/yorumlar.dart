@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:socialapp/modeller/gonderi.dart';
+import 'package:socialapp/modeller/yorum.dart';
+import 'package:socialapp/servisler/firestoreservisi.dart';
 
 class Yorumlar extends StatefulWidget {
 
@@ -13,11 +16,24 @@ Yorumlar({this.gonderi});
 class _YorumlarState extends State<Yorumlar> {
 
   yorumlariGoster(){
+    
     return Expanded(
-          child: Container(
-        color: Colors.red,
-        height: 50.0,
-      ),
+          child: StreamBuilder<QuerySnapshot>(
+            stream: FireStoreServisi().yorumlariGetir(widget.gonderi.id),
+            builder: (context, snapshot){
+              if(!snapshot.hasData){
+                return Center(child: CircularProgressIndicator());
+              }
+              
+              return ListView.builder(
+                itemCount: snapshot.data.documents.length, //QuerySnapShot olduğunu bilmediği için tamamlamaz ama çalışır
+                itemBuilder: (context, index){
+                  Yorum yorum= Yorum.dokumandanUret(snapshot.data.documents[index]);
+                  return Text(yorum.icerik);
+                }
+                );
+            }
+            ),
     );
   }
 
@@ -38,7 +54,10 @@ class _YorumlarState extends State<Yorumlar> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Yorumlar"),
+        iconTheme: IconThemeData(
+          color: Colors.black
+        ),
+        title: Text("Yorumlar",style: TextStyle(color: Colors.black),),
         backgroundColor: Colors.grey[100],
       ),
       body: Column(

@@ -159,8 +159,22 @@ class FireStoreServisi {
         .collection("gonderiYorumlari")
         .orderBy('timestamp', descending: true)
         .snapshots();
-        
 
+  }
+
+
+ void yorumEkle({String aktifKullaniciId, String gonderiId, String icerik}){
+    
+    _firestore
+    .collection("yorumlar")
+        .document(gonderiId)
+        .collection("gonderiYorumlari")
+        .add({
+          "icerik":icerik,
+          "yayinlayanId":icerik,
+          "timestamp":icerik,
+        });
+        
   }
 
 
