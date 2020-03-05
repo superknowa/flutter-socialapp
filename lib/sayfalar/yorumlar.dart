@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 class Yorumlar extends StatefulWidget {
+
+
+
+
   @override
   _YorumlarState createState() => _YorumlarState();
 }
@@ -12,7 +16,7 @@ class _YorumlarState extends State<Yorumlar> {
       appBar: AppBar(
         title: Text("Yorumlar"),
       ),
-      body: ListView(
+      body: Column(
         children: <Widget>[
           
         ],
