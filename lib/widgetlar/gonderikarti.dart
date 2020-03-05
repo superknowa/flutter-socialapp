@@ -21,11 +21,29 @@ class _GonderiKartState extends State<GonderiKart> {
 
   int _begeniSayisi = 0;
   bool _begendin = false;
+  String aktifKullaniciId;
 
   @override
   void initState() { 
+
     super.initState();
+    aktifKullaniciId = Provider.of<YetkilendirmeServisi>(context, listen: false).aktifKullaniciId;
     _begeniSayisi = widget.gonderi.begeniSayisi;
+    begeniVarMi();
+    
+  }
+
+  begeniVarMi() async {
+    bool begeniVarMi = await FireStoreServisi().begeniVarmi(aktifKullaniciId: aktifKullaniciId,gonderi: widget.gonderi);
+    if(begeniVarMi){
+
+      if (mounted) { 
+        setState(() {
+          _begendin = true;
+        });
+      }
+
+    }
   }
 
   gonderiBasligi() {
@@ -120,7 +138,6 @@ class _GonderiKartState extends State<GonderiKart> {
 
   begeniDegistir(){
 
-    String aktifKullaniciId = Provider.of<YetkilendirmeServisi>(context, listen: false).aktifKullaniciId;
 
     if(_begendin){
       //Beğenmiş durumdasın, beğeniden çıkart

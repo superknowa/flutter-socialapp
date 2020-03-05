@@ -27,27 +27,36 @@ class _ProfilState extends State<Profil> {
   _takipciSayisiGetir() async {
     final takipciSayisi =
         await FireStoreServisi().takipciSayisi(widget.profilSahibiId);
-    setState(() {
-      takipci = takipciSayisi;
-    });
+
+    if (mounted) {    
+      setState(() {
+        takipci = takipciSayisi;
+      });
+    }
   }
 
   _takipEdilenSayisiGetir() async {
     final takipEdilenSayisi =
         await FireStoreServisi().takipEdileniSayisi(widget.profilSahibiId);
-    setState(() {
-      takipEdilen = takipEdilenSayisi;
-    });
+
+    if (mounted) {     
+      setState(() {
+        takipEdilen = takipEdilenSayisi;
+      });
+    }
   }
 
   _gonderileriGetir() async {
     List<Gonderi> gonderiler =
         await FireStoreServisi().gonderileriGetir(widget.profilSahibiId);
     print("Gönderi sayısı: ${gonderiler.length}");
-    setState(() {
-      _gonderiler = gonderiler;
-      gonderiSayisi = _gonderiler.length;
-    });
+
+    if (mounted) { 
+      setState(() {
+        _gonderiler = gonderiler;
+        gonderiSayisi = _gonderiler.length;
+      });
+    }
   }
 
   @override

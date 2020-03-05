@@ -135,8 +135,19 @@ class FireStoreServisi {
     }
   }
 
-  begeniVar({String aktifKullaniciId, Gonderi gonderi}){
-    
+  Future<bool> begeniVarmi({String aktifKullaniciId, Gonderi gonderi}) async {
+    DocumentSnapshot doc = await _firestore
+        .collection("begeniler")
+        .document(gonderi.id)
+        .collection("gonderiBegenileri")
+        .document(aktifKullaniciId).get();
+
+        if(doc.exists){
+          //doc varsa beğeni var
+          return true;
+        }
+        //Tek satırda da yazılabilir
+        return false;
   }
 
 
