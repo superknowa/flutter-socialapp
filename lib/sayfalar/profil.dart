@@ -122,20 +122,30 @@ class _ProfilState extends State<Profil> {
   }
 
   Widget _profilButon() {
+    return widget.profilSahibiId == widget.aktifKullaniciId ? _profiliDuzenleButon() : _takipEtButon();
+  }
+
+  Text _takipEtButon() { 
+    
+    return Text("Takip Et");
+
+  }
+
+  Container _profiliDuzenleButon() {
     return Container(
-      alignment: Alignment.center,
-      width: double.infinity,
-      height: 34.0,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5.0),
-        border: Border.all(width: 1.0, color: Colors.grey[300]),
-        color: Colors.white54,
-      ),
-      child: Text(
-        "Profili Düzenle",
-        style: TextStyle(fontWeight: FontWeight.bold),
-      ),
-    );
+    alignment: Alignment.center,
+    width: double.infinity,
+    height: 34.0,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(5.0),
+      border: Border.all(width: 1.0, color: Colors.grey[300]),
+      color: Colors.white54,
+    ),
+    child: Text(
+      "Profili Düzenle",
+      style: TextStyle(fontWeight: FontWeight.bold),
+    ),
+  );
   }
 
   Widget _profilSayac({String baslik, int sayi}) {
