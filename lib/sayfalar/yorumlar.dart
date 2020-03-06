@@ -1,10 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:socialapp/modeller/gonderi.dart';
+import 'package:socialapp/modeller/kullanici.dart';
 import 'package:socialapp/modeller/yorum.dart';
 import 'package:socialapp/servisler/firestoreservisi.dart';
 import 'package:socialapp/servisler/yetkilendirmeservisi.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class Yorumlar extends StatefulWidget {
 
@@ -18,6 +21,34 @@ Yorumlar({this.gonderi});
 class _YorumlarState extends State<Yorumlar> {
 
   TextEditingController _yorumKontrolcusu = TextEditingController();
+
+
+  yorumSatiri(Yorum yorum){
+    return FutureBuilder<Kullanici>(
+      future: FireStoreServisi().kullaniciGetir(yorum.yayinlayanId),
+      builder: (context, snapshot) {
+
+        Kullanici yayinlayan = snapshot.data;
+
+        if(!snapshot.hasData){
+          return SizedBox(height: 0.0,);
+        }
+
+        return ListTile(
+          leading: CircleAvatar(
+            backgroundImage: CachedNetworkImageProvider(yayinlayan.fotoUrl),
+          ),
+          title: Row(
+            children: <Widget>[
+              Text("${yayinlayan.kullaniciAdi}}:",style: TextStyle(fontWeight: FontWeight.bold),),
+              Text(yorum.icerik)
+            ],
+          ),
+          subtitle: Text(timeago.format(yorum.timestamp.toDate(), locale: 'tr'))
+        );
+      }
+    );
+  }
 
   yorumlariGoster(){
     
@@ -33,7 +64,7 @@ class _YorumlarState extends State<Yorumlar> {
                 itemCount: snapshot.data.documents.length, //QuerySnapShot olduğunu bilmediği için tamamlamaz ama çalışır
                 itemBuilder: (context, index){
                   Yorum yorum= Yorum.dokumandanUret(snapshot.data.documents[index]);
-                  return Text(yorum.icerik);
+                  return yorumSatiri(yorum);
                 }
                 );
             }
