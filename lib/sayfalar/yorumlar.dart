@@ -102,7 +102,7 @@ class _YorumlarState extends State<Yorumlar> {
         title: Text("Yorumlar",style: TextStyle(color: Colors.black),),
         backgroundColor: Colors.grey[100],
       ),
-      body: Column(
+      body: Column( // Neden column kaydırmak gerekmeyecekmi diyebilirsiniz. Doğru gerekecek ama sayfanın bütününü kaydırmicaz sadece yorumlar kısmı kayacak. Alt kısım sabit kalacak. Yorumları listview.builder içine alıcaz
         children: <Widget>[
           yorumlariGoster(),
           yorumEkle()

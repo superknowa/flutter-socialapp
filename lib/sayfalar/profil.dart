@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:socialapp/modeller/gonderi.dart';
 import 'package:socialapp/modeller/kullanici.dart';
+import 'package:socialapp/sayfalar/profiliduzenle.dart';
 import 'package:socialapp/servisler/firestoreservisi.dart';
 import 'package:socialapp/servisler/yetkilendirmeservisi.dart';
 import 'package:socialapp/widgetlar/gonderikarti.dart';
@@ -125,27 +126,32 @@ class _ProfilState extends State<Profil> {
     return widget.profilSahibiId == widget.aktifKullaniciId ? _profiliDuzenleButon() : _takipEtButon();
   }
 
-  Text _takipEtButon() { 
+  Widget _takipEtButon() { 
     
     return Text("Takip Et");
 
   }
 
-  Container _profiliDuzenleButon() {
-    return Container(
-    alignment: Alignment.center,
-    width: double.infinity,
-    height: 34.0,
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(5.0),
-      border: Border.all(width: 1.0, color: Colors.grey[300]),
-      color: Colors.white54,
-    ),
-    child: Text(
-      "Profili Düzenle",
-      style: TextStyle(fontWeight: FontWeight.bold),
-    ),
-  );
+  Widget _profiliDuzenleButon() {
+    return InkWell(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>ProfiliDuzenle()));
+      },
+          child: Container(
+      alignment: Alignment.center,
+      width: double.infinity,
+      height: 34.0,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5.0),
+        border: Border.all(width: 1.0, color: Colors.grey[300]),
+        color: Colors.white54,
+      ),
+      child: Text(
+        "Profili Düzenle",
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+  ),
+    );
   }
 
   Widget _profilSayac({String baslik, int sayi}) {
