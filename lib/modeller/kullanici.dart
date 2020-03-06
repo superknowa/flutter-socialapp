@@ -8,9 +8,9 @@ class Kullanici {
   final String kullaniciAdi;
   final String fotoUrl;
   final String email;
-  final String bio;
+  final String hakkinda;
 
-  Kullanici({@required this.id, this.kullaniciAdi, this.fotoUrl, this.email,  this.bio});
+  Kullanici({@required this.id, this.kullaniciAdi, this.fotoUrl, this.email,  this.hakkinda});
 
 
   factory Kullanici.firebasedenUret(FirebaseUser kullanici) {
@@ -29,7 +29,7 @@ class Kullanici {
       kullaniciAdi: doc['username'],
       email: doc['email'],
       fotoUrl: doc['photoUrl'],
-      bio: doc['bio'],
+      hakkinda: doc['hakkinda'],
     );
   }
 

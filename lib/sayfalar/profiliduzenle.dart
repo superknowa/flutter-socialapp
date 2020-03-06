@@ -1,6 +1,15 @@
+import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:socialapp/modeller/kullanici.dart';
 
 class ProfiliDuzenle extends StatefulWidget {
+
+  final Kullanici profil;
+  ProfiliDuzenle({this.profil});
+
   @override
   _ProfiliDuzenleState createState() => _ProfiliDuzenleState();
 }
@@ -10,16 +19,31 @@ class _ProfiliDuzenleState extends State<ProfiliDuzenle> {
 final _formKey = GlobalKey<FormState>();
 String _kullaniciAdi = "";
 String _hakkinda = "";
+File _secilmisFoto;
+  
+  fotoSec() async {
+
+    File resimDosyasi = await ImagePicker.pickImage(source: ImageSource.gallery,imageQuality: 80);
+    if(resimDosyasi!=null){
+      setState(() {
+        _secilmisFoto = resimDosyasi;
+      });
+    }
+  }
 
   profilFoto(){
     return Column(
-      children: <Widget>[
-        SizedBox(height: 15.0,),
-        CircleAvatar(backgroundColor: Colors.grey,radius: 55.0,),
-        SizedBox(height: 20.0,),
-        Text("Fotoğraf Ekle",style: TextStyle(fontSize: 20.0,fontWeight: FontWeight.w400),)
-      ],
-    );
+        children: <Widget>[
+    SizedBox(height: 15.0,),
+    GestureDetector(
+      onTap: fotoSec,
+          child: CircleAvatar(
+        backgroundImage: _secilmisFoto == null ?  CachedNetworkImageProvider(widget.profil.fotoUrl) : FileImage(_secilmisFoto),
+        radius: 55.0,
+      ),
+    ),
+        ],
+      );
   }
 
   kullaniciBilgileri(){
@@ -32,6 +56,7 @@ String _hakkinda = "";
           children: <Widget>[
             SizedBox(height: 20.0,),
             TextFormField(
+              initialValue: widget.profil.kullaniciAdi,
               decoration: InputDecoration(
                 labelText: "Kullanıcı Adı"
               ),
@@ -43,6 +68,7 @@ String _hakkinda = "";
               },
             ),
             TextFormField(
+              initialValue: widget.profil.hakkinda,
               decoration: InputDecoration(
                 labelText: "Hakkında"
               ),
@@ -62,12 +88,10 @@ String _hakkinda = "";
 
     if(_formKey.currentState.validate()){
       print("Girilen verilerde sorun yok");
-      print("Kullanıcı adı: $_kullaniciAdi");
-      print("Kullanıcı adı: $_hakkinda");
       _formKey.currentState.save();
       print("Kullanıcı adı: $_kullaniciAdi");
       print("Kullanıcı adı: $_hakkinda");
-      
+
     }
 
   }

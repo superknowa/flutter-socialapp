@@ -24,6 +24,7 @@ class _ProfilState extends State<Profil> {
   int takipEdilen = 0;
   List<Gonderi> _gonderiler = [];
   String gonderiStili = "liste";
+  Kullanici _profilSahibi;
 
   _takipciSayisiGetir() async {
     final takipciSayisi =
@@ -111,7 +112,7 @@ class _ProfilState extends State<Profil> {
           Container(
               alignment: Alignment.centerLeft,
               child: Text(
-                profilData.bio,
+                profilData.hakkinda,
               )),
           SizedBox(
             height: 25.0,
@@ -135,7 +136,7 @@ class _ProfilState extends State<Profil> {
   Widget _profiliDuzenleButon() {
     return InkWell(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>ProfiliDuzenle()));
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>ProfiliDuzenle(profil: _profilSahibi,)));
       },
           child: Container(
       alignment: Alignment.center,
@@ -248,9 +249,12 @@ class _ProfilState extends State<Profil> {
             //Editör tamamlama yapabilsin diye Kullanici tipini tanımladım.
             future: FireStoreServisi().kullaniciGetir(widget.profilSahibiId),
             builder: (context, snapshot) {
+              
               if (!snapshot.hasData) {
                 return Center(child: CircularProgressIndicator());
               }
+              _profilSahibi = snapshot.data;
+              
               return ListView(
                 children: <Widget>[
                   _profilDetaylari(snapshot.data),
