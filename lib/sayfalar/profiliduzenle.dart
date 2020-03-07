@@ -43,7 +43,10 @@ bool _yukleniyor = false;
     GestureDetector(
       onTap: fotoSec,
           child: CircleAvatar(
-        backgroundImage: _secilmisFoto == null ?  CachedNetworkImageProvider(widget.profil.fotoUrl) : FileImage(_secilmisFoto),
+            backgroundColor: Colors.grey[300],
+        backgroundImage: _secilmisFoto == null ?  (widget.profil.fotoUrl.isNotEmpty
+                      ? CachedNetworkImageProvider(widget.profil.fotoUrl)
+                      : AssetImage("assets/male.png")) : FileImage(_secilmisFoto),
         radius: 55.0,
       ),
     ),
