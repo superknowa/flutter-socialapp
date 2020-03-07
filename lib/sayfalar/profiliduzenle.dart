@@ -3,7 +3,11 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:socialapp/modeller/kullanici.dart';
+import 'package:socialapp/servisler/firestoreservisi.dart';
+import 'package:socialapp/servisler/storageservisi.dart';
+import 'package:socialapp/servisler/yetkilendirmeservisi.dart';
 
 class ProfiliDuzenle extends StatefulWidget {
 
@@ -20,6 +24,7 @@ final _formKey = GlobalKey<FormState>();
 String _kullaniciAdi = "";
 String _hakkinda = "";
 File _secilmisFoto;
+bool _yukleniyor = false;
   
   fotoSec() async {
 
@@ -84,13 +89,35 @@ File _secilmisFoto;
 
   }
 
-  kaydet(){
+  kaydet() async{
 
     if(_formKey.currentState.validate()){
-      print("Girilen verilerde sorun yok");
+    
+      setState(() {
+        _yukleniyor = true;
+      });
+
       _formKey.currentState.save();
-      print("Kullanıcı adı: $_kullaniciAdi");
-      print("Kullanıcı adı: $_hakkinda");
+      
+
+      String profiResmilUrl;
+
+      if(_secilmisFoto == null){
+        profiResmilUrl = widget.profil.fotoUrl;
+      } else {
+        profiResmilUrl = await  StorageServisi().profiliResmiYukle(_secilmisFoto);
+      }
+
+      
+
+      String aktifKullaniciId = Provider.of<YetkilendirmeServisi>(context, listen: false).aktifKullaniciId;
+      FireStoreServisi().kullaniciGuncelle(kullaniciId: aktifKullaniciId, kullaniciAdi: _kullaniciAdi, fotoUrl: profiResmilUrl, hakkinda: _hakkinda);
+
+      setState(() {
+        _yukleniyor = false;
+      });
+
+      Navigator.pop(context);
 
     }
 
@@ -109,6 +136,7 @@ File _secilmisFoto;
       ),
       body: ListView(
         children: <Widget>[
+          _yukleniyor ? LinearProgressIndicator() : SizedBox(height: 0.0,),
           profilFoto(),
           kullaniciBilgileri()
         ],

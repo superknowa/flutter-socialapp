@@ -178,4 +178,18 @@ class FireStoreServisi {
   }
 
 
+  void kullaniciGuncelle({String kullaniciId, String kullaniciAdi, String fotoUrl = "", String hakkinda}){
+    
+    _firestore
+    .collection("kullanicilar")
+        .document(kullaniciId)
+        .updateData({
+          "username":kullaniciAdi,
+          "photoUrl":fotoUrl,
+          "bio":hakkinda,
+        });
+
+  }
+
+
 }

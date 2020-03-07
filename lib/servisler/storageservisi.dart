@@ -17,5 +17,16 @@ Future<String> gonderiResmiYukle(File resimDosyasi) async {
 }
 
 
+Future<String> profiliResmiYukle(File resimDosyasi) async {
+
+    resimId = Uuid().v4();
+    StorageUploadTask yuklemeTakibi = _storage.child("resimler/profil/gonderi_$resimId.jpg").putFile(resimDosyasi);
+    StorageTaskSnapshot snapshot = await yuklemeTakibi.onComplete;
+    String yuklenenResimUrl = await snapshot.ref.getDownloadURL();
+    return yuklenenResimUrl;
+    
+}
+
+
 
 }

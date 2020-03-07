@@ -29,7 +29,7 @@ class Kullanici {
       kullaniciAdi: doc['username'],
       email: doc['email'],
       fotoUrl: doc['photoUrl'],
-      hakkinda: doc['hakkinda'],
+      hakkinda: doc['bio'],
     );
   }
 
