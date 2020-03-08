@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class Kesfet extends StatefulWidget {
+class Ara extends StatefulWidget {
   @override
-  _KesfetState createState() => _KesfetState();
+  _AraState createState() => _AraState();
 }
 
-class _KesfetState extends State<Kesfet> {
+class _AraState extends State<Ara> {
   @override
   Widget build(BuildContext context) {
     return Center(child: Text("Keşfet"));
