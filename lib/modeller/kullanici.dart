@@ -25,7 +25,7 @@ class Kullanici {
 
   factory Kullanici.dokumandanUret(DocumentSnapshot doc) {
     return Kullanici(
-      id : doc['id'],
+      id : doc.documentID,
       kullaniciAdi: doc['username'],
       email: doc['email'],
       fotoUrl: doc['photoUrl'],

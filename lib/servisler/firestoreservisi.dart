@@ -8,7 +8,6 @@ class FireStoreServisi {
 
   Future<void> kullaniciOlustur({id, email, kullaniciAdi, fotoUrl = ""}) async {
     await _firestore.collection("kullanicilar").document(id).setData({
-      "id": id,
       "username": kullaniciAdi,
       "photoUrl": fotoUrl,
       "email": email,
