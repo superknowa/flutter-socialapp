@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:socialapp/modeller/kullanici.dart';
 import 'package:socialapp/sayfalar/akis.dart';
 import 'package:socialapp/sayfalar/duyurular.dart';
-import 'package:socialapp/sayfalar/kesfet.dart';
+import 'package:socialapp/sayfalar/ara.dart';
 import 'package:socialapp/sayfalar/profil.dart';
 import 'package:socialapp/sayfalar/yukle.dart';
 import 'package:socialapp/servisler/yetkilendirmeservisi.dart';
@@ -49,7 +49,7 @@ class _AnaSayfaState extends State<AnaSayfa> {
         },
         children: <Widget>[
         Akis(),
-        Kesfet(),
+        Ara(),
         Yukle(),
         Duyurular(),
         Profil(profilSahibiId: aktifKullaniciId,aktifKullaniciId: aktifKullaniciId)

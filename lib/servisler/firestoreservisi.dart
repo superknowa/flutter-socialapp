@@ -191,5 +191,19 @@ class FireStoreServisi {
 
   }
 
+  Future<List<Kullanici>> kullaniciAra(String kelime) async {
+
+     QuerySnapshot snapshot = await _firestore
+    .collection("kullanicilar")
+    .where("username",isGreaterThanOrEqualTo: kelime )
+    .getDocuments();
+
+    
+        List<Kullanici> kullanicilar =
+        snapshot.documents.map((doc) => Kullanici.dokumandanUret(doc)).toList();
+        return kullanicilar;
+
+  }
+
 
 }
