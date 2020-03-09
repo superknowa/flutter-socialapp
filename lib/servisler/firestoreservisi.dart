@@ -205,4 +205,70 @@ class FireStoreServisi {
   }
 
 
+  void takipEt({String aktifKullaniciId, String profilSahibiId}){
+
+    _firestore
+        .collection("takipciler")
+        .document(profilSahibiId)
+        .collection("kullanicininTakipcileri")
+        .document(aktifKullaniciId)
+        .setData({});
+
+        _firestore
+        .collection("takipedilenler")
+        .document(aktifKullaniciId)
+        .collection("kullanicininTakipleri")
+        .document(profilSahibiId)
+        .setData({});
+
+  }
+
+
+  void takiptenCik({String aktifKullaniciId, String profilSahibiId}) {
+
+        //Takipçi Sil
+        _firestore
+        .collection("takipciler")
+        .document(profilSahibiId)
+        .collection("kullanicininTakipcileri")
+        .document(aktifKullaniciId).get().then((DocumentSnapshot doc){
+            if(doc.exists){
+              doc.reference.delete();
+            }
+        });
+
+        //Takip edilen Sil
+        _firestore
+        .collection("takipedilenler")
+        .document(aktifKullaniciId)
+        .collection("kullanicininTakipleri")
+        .document(profilSahibiId).get().then((DocumentSnapshot doc){
+            if(doc.exists){
+              doc.reference.delete();
+            }
+        });
+
+
+  }
+
+
+  Future<bool> takipKontrol({String aktifKullaniciId, String profilSahibiId}) async {
+    DocumentSnapshot doc = await _firestore
+        .collection("takipedilenler")
+        .document(aktifKullaniciId)
+        .collection("kullanicininTakipleri")
+        .document(profilSahibiId)
+        .get();
+
+        if(doc.exists){
+          return true;
+        }
+
+        return false;
+  }
+
+
+  
+
+
 }

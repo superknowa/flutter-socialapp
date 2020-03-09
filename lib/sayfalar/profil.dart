@@ -19,12 +19,13 @@ class Profil extends StatefulWidget {
 }
 
 class _ProfilState extends State<Profil> {
-  int gonderiSayisi = 0;
-  int takipci = 0;
-  int takipEdilen = 0;
+  int _gonderiSayisi = 0; //Tüm global değişkenleri alt çizgili yapalım.
+  int _takipci = 0;
+  int _takipEdilen = 0;
   List<Gonderi> _gonderiler = [];
   String gonderiStili = "liste";
   Kullanici _profilSahibi;
+  bool _takipEdildi = false;
 
   _takipciSayisiGetir() async {
     final takipciSayisi =
@@ -32,7 +33,7 @@ class _ProfilState extends State<Profil> {
 
     if (mounted) {    
       setState(() {
-        takipci = takipciSayisi;
+        _takipci = takipciSayisi;
       });
     }
   }
@@ -43,7 +44,7 @@ class _ProfilState extends State<Profil> {
 
     if (mounted) {     
       setState(() {
-        takipEdilen = takipEdilenSayisi;
+        _takipEdilen = takipEdilenSayisi;
       });
     }
   }
@@ -56,9 +57,16 @@ class _ProfilState extends State<Profil> {
     if (mounted) { 
       setState(() {
         _gonderiler = gonderiler;
-        gonderiSayisi = _gonderiler.length;
+        _gonderiSayisi = _gonderiler.length;
       });
     }
+  }
+
+  _takipKontrol() async {
+    bool takipVarMi = await FireStoreServisi().takipKontrol(aktifKullaniciId: widget.aktifKullaniciId,profilSahibiId: widget.profilSahibiId);
+    setState(() {
+      _takipEdildi = takipVarMi;
+    });
   }
 
   @override
@@ -67,6 +75,7 @@ class _ProfilState extends State<Profil> {
     _takipciSayisiGetir();
     _takipEdilenSayisiGetir();
     _gonderileriGetir();
+    _takipKontrol();
   }
 
   Widget _profilDetaylari(Kullanici profilData) {
@@ -88,9 +97,9 @@ class _ProfilState extends State<Profil> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      _profilSayac(baslik: "Gönderiler", sayi: gonderiSayisi),
-                      _profilSayac(baslik: "Takipçi", sayi: takipci),
-                      _profilSayac(baslik: "Takip", sayi: takipEdilen),
+                      _profilSayac(baslik: "Gönderiler", sayi: _gonderiSayisi),
+                      _profilSayac(baslik: "Takipçi", sayi: _takipci),
+                      _profilSayac(baslik: "Takip", sayi: _takipEdilen),
                     ],
                   )
                 ],
@@ -127,10 +136,62 @@ class _ProfilState extends State<Profil> {
     return widget.profilSahibiId == widget.aktifKullaniciId ? _profiliDuzenleButon() : _takipEtButon();
   }
 
+
+
   Widget _takipEtButon() { 
     
-    return Text("Takip Et");
+    return _takipEdildi ? takiptenCikButon() : takipEtButon();
 
+  }
+
+  takiptenCikButon(){
+    return GestureDetector(
+      onTap: (){
+        FireStoreServisi().takiptenCik(profilSahibiId: widget.profilSahibiId,aktifKullaniciId: widget.aktifKullaniciId);
+        setState(() {
+          _takipci = _takipci - 1;
+          _takipEdildi = false;
+        });
+      },
+          child: Container(
+        alignment: Alignment.center,
+        height: 34.0,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5.0),
+          border: Border.all(width: 1.0, color: Colors.grey[300]),
+          color: Colors.white54,
+        ),
+        child: Text(
+          "Takipten Çık",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+  ),
+    );
+  }
+
+  takipEtButon(){
+    return GestureDetector(
+      onTap: (){
+        setState(() {
+          _takipEdildi = true;
+          _takipci = _takipci + 1;
+        });
+        FireStoreServisi().takipEt(profilSahibiId: widget.profilSahibiId,aktifKullaniciId: widget.aktifKullaniciId);
+      },
+          child: Container(
+        alignment: Alignment.center,
+        height: 34.0,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5.0),
+          border: Border.all(width: 1.0, color: Colors.grey[300]),
+          color: Theme.of(context).primaryColor,
+        ),
+        child: Text(
+          "Takip Et",
+          style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+        ),
+  ),
+    );
   }
 
   Widget _profiliDuzenleButon() {
@@ -235,6 +296,7 @@ class _ProfilState extends State<Profil> {
             "Profil",
             style: TextStyle(color: Colors.black),
           ),
+          leading: IconButton(icon: Icon(Icons.arrow_back,color: Colors.black,), onPressed: ()=>Navigator.pop(context)),
           backgroundColor: Colors.grey[100],
           actions: <Widget>[
             IconButton(
