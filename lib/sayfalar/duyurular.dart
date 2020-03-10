@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:socialapp/modeller/duyurular.dart';
 import 'package:socialapp/modeller/kullanici.dart';
+import 'package:socialapp/sayfalar/profil.dart';
 import 'package:socialapp/servisler/firestoreservisi.dart';
 import 'package:socialapp/servisler/yetkilendirmeservisi.dart';
 
@@ -64,9 +65,16 @@ class _DuyurularState extends State<Duyurular> {
           Kullanici aktiviteYapan = snapshot.data;
 
           return ListTile(
-            leading: CircleAvatar(
-              backgroundImage:
-                  CachedNetworkImageProvider(aktiviteYapan.fotoUrl),
+            leading: InkWell(
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(
+                        builder: (context)=>Profil(aktifKullaniciId: _aktifKullaniciId,profilSahibiId: duyuru.aktiviteYapanId,)
+                        ));
+              },
+                          child: CircleAvatar(
+                backgroundImage:
+                    CachedNetworkImageProvider(aktiviteYapan.fotoUrl),
+              ),
             ),
             title: RichText(
               maxLines: 3,
@@ -76,7 +84,9 @@ class _DuyurularState extends State<Duyurular> {
                 children: <TextSpan>[
                   TextSpan(
                     recognizer: TapGestureRecognizer()..onTap = (){
-                      print("Kullanıcı adına tıkladın.");
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context)=>Profil(aktifKullaniciId: _aktifKullaniciId,profilSahibiId: duyuru.aktiviteYapanId,)
+                        ));
                     },
                     text: '${aktiviteYapan.kullaniciAdi}',
                     style: TextStyle(fontWeight: FontWeight.bold)
@@ -93,9 +103,6 @@ class _DuyurularState extends State<Duyurular> {
         });
   }
 
-  printo(){
-    print("sdsdfds usernme");
-  }
 
   gonderiGorsel(String aktiviteTipi, String gonderiFoto) {
     if (aktiviteTipi == "takip") {

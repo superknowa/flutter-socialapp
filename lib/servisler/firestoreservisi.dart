@@ -309,6 +309,22 @@ class FireStoreServisi {
   }
 
 
+
+  Future<Gonderi> tekliGonderiGetir(String gonderiId,String gonderiSahibiId) async {
+    
+    DocumentSnapshot doc = await _firestore
+        .collection("gonderiler")
+        .document(gonderiSahibiId)
+        .collection("kullaniciGonderileri")
+        .document(gonderiId)
+        .get();
+
+        Gonderi gonderi = Gonderi.dokumandanUret(doc);
+        
+        return gonderi;
+  }
+
+
   
 
 
