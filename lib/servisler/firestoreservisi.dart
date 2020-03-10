@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:socialapp/modeller/duyurular.dart';
 import 'package:socialapp/modeller/gonderi.dart';
 import 'package:socialapp/modeller/kullanici.dart';
 
@@ -97,6 +98,9 @@ class FireStoreServisi {
         .collection("gonderiBegenileri")
         .document(aktifKullaniciId)
         .setData({});
+
+        //Beğeni haberini gönderi sahibine iletiyoruz.
+        duyuruEkle(aktiviteTipi: "begeni",aktiviteYapanId: aktifKullaniciId,gonderi: gonderi,profilSahibiId: gonderi.yayinlayanId);
 
     }
   }
@@ -265,6 +269,43 @@ class FireStoreServisi {
         }
 
         return false;
+  }
+
+
+  void duyuruEkle({String aktiviteYapanId, String profilSahibiId, String aktiviteTipi,String yorum,Gonderi gonderi}) async {
+
+    _firestore
+        .collection("duyurular")
+        .document(profilSahibiId)
+        .collection("kullanicininDuyurulari")
+        .document(aktiviteYapanId)
+        .setData({
+          "aktiviteYapanId" : aktiviteYapanId,
+          "aktiviteTipi" : aktiviteTipi,
+          "gonderiId" : gonderi.id,
+          "gonderiFoto" : gonderi.gonderResimiUrl,
+          "yorum" : yorum,
+          "timestamp" : timestamp
+        });
+
+  }
+
+
+  Future <List<Duyuru>> duyurulariGetir(String kullaniciId) async {
+   QuerySnapshot snapshot = await _firestore
+        .collection("duyurular")
+        .document(kullaniciId)
+        .collection("kullanicininDuyurulari")
+        .getDocuments();
+
+        List<Duyuru> duyurular = [];
+        //Farklılık olsun map yerine forEach kullanalım
+        snapshot.documents.forEach((DocumentSnapshot doc){
+          Duyuru duyuru = Duyuru.dokumandanUret(doc);
+          duyurular.add(duyuru);
+        });
+
+        return duyurular;
   }
 
 
