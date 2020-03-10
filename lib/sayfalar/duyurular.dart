@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:socialapp/modeller/duyurular.dart';
 import 'package:socialapp/modeller/kullanici.dart';
 import 'package:socialapp/sayfalar/profil.dart';
+import 'package:socialapp/sayfalar/tekligonderi.dart';
 import 'package:socialapp/servisler/firestoreservisi.dart';
 import 'package:socialapp/servisler/yetkilendirmeservisi.dart';
 
@@ -98,23 +99,28 @@ class _DuyurularState extends State<Duyurular> {
                 ],
               ),
             ),
-            trailing: gonderiGorsel(duyuru.aktiviteTipi, duyuru.gonderiFoto),
+            trailing: gonderiGorsel(duyuru.aktiviteTipi, duyuru.gonderiFoto, duyuru.gonderiId),
           );
         });
   }
 
 
-  gonderiGorsel(String aktiviteTipi, String gonderiFoto) {
+  gonderiGorsel(String aktiviteTipi, String gonderiFoto, String gonderiId) {
     if (aktiviteTipi == "takip") {
       return null;
     } else if (aktiviteTipi == "begeni" || aktiviteTipi == "yorum") {
-      return Container(
-        width: 50.0,
-        height: 50.0,
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: CachedNetworkImageProvider(gonderiFoto),
-                fit: BoxFit.cover)),
+      return GestureDetector(
+        onTap: (){
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>TekliGonderi(gonderiId:gonderiId ,gonderiSahibiId: _aktifKullaniciId,)));
+        },
+              child: Container(
+          width: 50.0,
+          height: 50.0,
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: CachedNetworkImageProvider(gonderiFoto),
+                  fit: BoxFit.cover)),
+        ),
       );
     }
   }

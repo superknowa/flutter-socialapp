@@ -20,6 +20,9 @@ class TekliGonderi extends StatefulWidget {
 class _TekliGonderiState extends State<TekliGonderi> {
 
   Gonderi _gonderi;
+  Kullanici _gonderiSahibi;
+  bool _yukleniyor = true;
+ 
 
   @override
   void initState() { 
@@ -30,10 +33,22 @@ class _TekliGonderiState extends State<TekliGonderi> {
 
 
   gonderiGetir() async {
+
+
+
     Gonderi gonderi = await FireStoreServisi().tekliGonderiGetir(widget.gonderiId, widget.gonderiSahibiId);
-    setState(() {
-      _gonderi = gonderi;
-    });
+    if(gonderi != null){
+
+
+      Kullanici gonderiSahibi = await FireStoreServisi().kullaniciGetir(gonderi.yayinlayanId);
+      
+      setState(() {
+        _gonderi = gonderi;
+        _gonderiSahibi = gonderiSahibi;
+        _yukleniyor = false;
+      });
+
+    }
   }
 
 
@@ -48,19 +63,7 @@ class _TekliGonderiState extends State<TekliGonderi> {
           leading: IconButton(icon: Icon(Icons.arrow_back,color: Colors.black,), onPressed: ()=>Navigator.pop(context)),
           backgroundColor: Colors.grey[100],
         ),
-        body: FutureBuilder<Kullanici>(
-          future: FireStoreServisi().kullaniciGetir(_gonderi.yayinlayanId),
-          builder: (context, snapshot){
-
-            if(!snapshot.hasData){
-              return Center(child: CircularProgressIndicator());
-            }
-
-            Kullanici gonderiSahibi = snapshot.data;
-            return GonderiKart(gonderi: _gonderi, yayinlayan: gonderiSahibi,);
-
-          }
-          ),
+        body: _yukleniyor == false ? GonderiKart(gonderi: _gonderi, yayinlayan: _gonderiSahibi,) : Center(child: CircularProgressIndicator()),
     );
   }
 }
