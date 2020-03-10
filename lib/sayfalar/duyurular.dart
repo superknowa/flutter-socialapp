@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:socialapp/modeller/duyurular.dart';
@@ -28,10 +29,12 @@ class _DuyurularState extends State<Duyurular> {
   duyurulariGetir() async {
     List<Duyuru> duyurular =
         await FireStoreServisi().duyurulariGetir(_aktifKullaniciId);
-    setState(() {
-      _duyurular = duyurular;
-      _yukleniyor = false;
-    });
+    if(mounted){ //Widget'ın hala orada olduğundan emin olalım.
+      setState(() {
+        _duyurular = duyurular;
+        _yukleniyor = false;
+      });
+    }
   }
 
   mesajOlustur(String aktiviteTipi) {
@@ -66,10 +69,15 @@ class _DuyurularState extends State<Duyurular> {
                   CachedNetworkImageProvider(aktiviteYapan.fotoUrl),
             ),
             title: RichText(
+              maxLines: 3,
+              overflow: TextOverflow.fade,
               text: TextSpan(
                 style: TextStyle(color: Colors.black),
                 children: <TextSpan>[
                   TextSpan(
+                    recognizer: TapGestureRecognizer()..onTap = (){
+                      print("Kullanıcı adına tıkladın.");
+                    },
                     text: '${aktiviteYapan.kullaniciAdi}',
                     style: TextStyle(fontWeight: FontWeight.bold)
                     ),
@@ -83,6 +91,10 @@ class _DuyurularState extends State<Duyurular> {
             trailing: gonderiGorsel(duyuru.aktiviteTipi, duyuru.gonderiFoto),
           );
         });
+  }
+
+  printo(){
+    print("sdsdfds usernme");
   }
 
   gonderiGorsel(String aktiviteTipi, String gonderiFoto) {
