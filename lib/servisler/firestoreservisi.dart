@@ -166,17 +166,20 @@ class FireStoreServisi {
   }
 
 
- void yorumEkle({String aktifKullaniciId, String gonderiId, String icerik}){
+ void yorumEkle({String aktifKullaniciId, Gonderi gonderi, String icerik}){
     
     _firestore
     .collection("yorumlar")
-        .document(gonderiId)
+        .document(gonderi.id)
         .collection("gonderiYorumlari")
         .add({
           "icerik":icerik,
           "yayinlayanId":aktifKullaniciId,
           "timestamp":timestamp,
         });
+
+        //Yorum duyurusunu gönderi sahibine iletiyoruz.
+        duyuruEkle(aktiviteTipi: "yorum", aktiviteYapanId: aktifKullaniciId, gonderi: gonderi, profilSahibiId: gonderi.yayinlayanId ,yorum: icerik);
 
   }
 
@@ -224,6 +227,10 @@ class FireStoreServisi {
         .collection("kullanicininTakipleri")
         .document(profilSahibiId)
         .setData({});
+
+
+        //Takip edilen kullanıcıya duyuru gönder
+        duyuruEkle(aktiviteTipi: "takip", aktiviteYapanId: aktifKullaniciId,  profilSahibiId: profilSahibiId);
 
   }
 
@@ -278,12 +285,11 @@ class FireStoreServisi {
         .collection("duyurular")
         .document(profilSahibiId)
         .collection("kullanicininDuyurulari")
-        .document(aktiviteYapanId)
-        .setData({
+        .add({
           "aktiviteYapanId" : aktiviteYapanId,
           "aktiviteTipi" : aktiviteTipi,
-          "gonderiId" : gonderi.id,
-          "gonderiFoto" : gonderi.gonderResimiUrl,
+          "gonderiId" : gonderi == null ? null : gonderi.id,
+          "gonderiFoto" : gonderi?.gonderResimiUrl,
           "yorum" : yorum,
           "timestamp" : timestamp
         });

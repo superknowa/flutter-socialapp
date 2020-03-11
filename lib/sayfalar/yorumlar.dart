@@ -87,7 +87,7 @@ class _YorumlarState extends State<Yorumlar> {
 
   yorumGonder(){
     String aktifKullaniciId = Provider.of<YetkilendirmeServisi>(context, listen: false).aktifKullaniciId;
-    FireStoreServisi().yorumEkle(aktifKullaniciId: aktifKullaniciId, gonderiId: widget.gonderi.id, icerik: _yorumKontrolcusu.text);
+    FireStoreServisi().yorumEkle(aktifKullaniciId: aktifKullaniciId, gonderi: widget.gonderi, icerik: _yorumKontrolcusu.text);
     _yorumKontrolcusu.clear();
   }
 

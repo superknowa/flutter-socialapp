@@ -93,7 +93,7 @@ class _DuyurularState extends State<Duyurular> {
                     style: TextStyle(fontWeight: FontWeight.bold)
                     ),
                   TextSpan(
-                    text: ' $mesaj',
+                    text: duyuru.yorum == null ? ' $mesaj' : ' $mesaj ${duyuru.yorum}',
                     style: TextStyle(fontWeight: FontWeight.normal)
                     ),
                 ],
