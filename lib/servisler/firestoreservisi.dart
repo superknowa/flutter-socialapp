@@ -281,6 +281,10 @@ class FireStoreServisi {
 
   void duyuruEkle({String aktiviteYapanId, String profilSahibiId, String aktiviteTipi,String yorum,Gonderi gonderi}) async {
 
+    if(aktiviteYapanId == profilSahibiId){
+      return;
+    }
+
     _firestore
         .collection("duyurular")
         .document(profilSahibiId)
@@ -302,6 +306,7 @@ class FireStoreServisi {
         .collection("duyurular")
         .document(kullaniciId)
         .collection("kullanicininDuyurulari")
+        .orderBy('timestamp', descending: true)
         .limit(20) //Son 20 duyuruyu getirdi
         .getDocuments();
 

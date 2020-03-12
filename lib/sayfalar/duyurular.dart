@@ -8,6 +8,7 @@ import 'package:socialapp/sayfalar/profil.dart';
 import 'package:socialapp/sayfalar/tekligonderi.dart';
 import 'package:socialapp/servisler/firestoreservisi.dart';
 import 'package:socialapp/servisler/yetkilendirmeservisi.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class Duyurular extends StatefulWidget {
   @override
@@ -99,6 +100,7 @@ class _DuyurularState extends State<Duyurular> {
                 ],
               ),
             ),
+            subtitle: Text(timeago.format(duyuru.timestamp.toDate(), locale: 'tr')),
             trailing: gonderiGorsel(duyuru.aktiviteTipi, duyuru.gonderiFoto, duyuru.gonderiId),
           );
         });

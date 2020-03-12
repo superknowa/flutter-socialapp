@@ -296,16 +296,19 @@ class _ProfilState extends State<Profil> {
             "Profil",
             style: TextStyle(color: Colors.black),
           ),
-          leading: IconButton(icon: Icon(Icons.arrow_back,color: Colors.black,), onPressed: ()=>Navigator.pop(context)),
+          //leading: IconButton(icon: Icon(Icons.arrow_back,color: Colors.black,), onPressed: ()=>Navigator.pop(context)), Bu şekilde kullanırsam kendi profilimde de çıkar.
           backgroundColor: Colors.grey[100],
           actions: <Widget>[
-            IconButton(
+            widget.aktifKullaniciId == widget.profilSahibiId ? IconButton(
                 icon: Icon(
                   Icons.exit_to_app,
                   color: Colors.black,
                 ),
-                onPressed: cikisYap)
+                onPressed: cikisYap) : SizedBox() //Sadece kendi profilinde gözükmeli.
           ],
+          iconTheme: IconThemeData(//Geri tuşunun rengini belirledim.//Başkasının profili için
+          color: Colors.black
+        )
         ),
         body: FutureBuilder<Kullanici>(
             //Editör tamamlama yapabilsin diye Kullanici tipini tanımladım.
