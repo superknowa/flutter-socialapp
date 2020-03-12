@@ -288,7 +288,7 @@ class FireStoreServisi {
         .add({
           "aktiviteYapanId" : aktiviteYapanId,
           "aktiviteTipi" : aktiviteTipi,
-          "gonderiId" : gonderi == null ? null : gonderi.id,
+          "gonderiId" : gonderi?.id,
           "gonderiFoto" : gonderi?.gonderResimiUrl,
           "yorum" : yorum,
           "timestamp" : timestamp
@@ -302,6 +302,7 @@ class FireStoreServisi {
         .collection("duyurular")
         .document(kullaniciId)
         .collection("kullanicininDuyurulari")
+        .limit(20) //Son 20 duyuruyu getirdi
         .getDocuments();
 
         List<Duyuru> duyurular = [];

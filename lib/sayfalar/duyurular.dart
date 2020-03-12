@@ -28,7 +28,7 @@ class _DuyurularState extends State<Duyurular> {
     duyurulariGetir();
   }
 
-  duyurulariGetir() async {
+  Future<void> duyurulariGetir() async {
     List<Duyuru> duyurular =
         await FireStoreServisi().duyurulariGetir(_aktifKullaniciId);
     if(mounted){ //Widget'ın hala orada olduğundan emin olalım.
@@ -74,7 +74,7 @@ class _DuyurularState extends State<Duyurular> {
               },
                           child: CircleAvatar(
                 backgroundImage:
-                    CachedNetworkImageProvider(aktiviteYapan.fotoUrl),
+                    CachedNetworkImageProvider(aktiviteYapan.fotoUrl,),
               ),
             ),
             title: RichText(
@@ -126,14 +126,17 @@ class _DuyurularState extends State<Duyurular> {
   }
 
   Widget duyuruVar() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 12.0),
-      child: ListView.builder(
-          itemCount: _duyurular.length,
-          itemBuilder: (context, index) {
-            Duyuru duyuru = _duyurular[index];
-            return duyuruSatiri(duyuru);
-          }),
+    return RefreshIndicator(
+      onRefresh: duyurulariGetir,
+          child: Padding(
+          padding: const EdgeInsets.only(top: 12.0),
+          child: ListView.builder(
+        itemCount: _duyurular.length,
+        itemBuilder: (context, index) {
+          Duyuru duyuru = _duyurular[index];
+          return duyuruSatiri(duyuru);
+        }),
+        ),
     );
   }
 
@@ -141,7 +144,7 @@ class _DuyurularState extends State<Duyurular> {
     return Center(child: Text("Hiç duyurunuz yok."));
   }
 
-  kontrol() {
+  Widget kontrol() {
     if (_yukleniyor) {
       return Center(child: CircularProgressIndicator());
     }
@@ -163,6 +166,7 @@ class _DuyurularState extends State<Duyurular> {
           ),
           backgroundColor: Colors.grey[100],
         ),
-        body: kontrol());
+        body: kontrol()
+          );
   }
 }
