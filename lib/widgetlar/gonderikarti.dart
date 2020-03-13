@@ -47,6 +47,35 @@ class _GonderiKartState extends State<GonderiKart> {
     }
   }
 
+  gonderiSecenekleri(){
+
+    return showDialog(
+      context: context,
+      builder: (context){
+        return SimpleDialog(
+          title: Text("Seçiminizi nedir?"),
+          children: <Widget>[
+            SimpleDialogOption(
+               child: Text("Gönderiyi Sil"),
+               onPressed: (){
+                 FireStoreServisi().gonderiSil(aktifKullaniciId: aktifKullaniciId,gonderi: widget.gonderi);
+                 Navigator.pop(context);
+               },
+            ),
+             SimpleDialogOption(
+               child: Text("Vazgeç",style: TextStyle(color: Colors.red)),
+               onPressed: (){
+                 Navigator.pop(context);
+               },
+            )
+          ],
+        );
+      }
+      );
+
+
+  }
+
   gonderiBasligi() {
     return ListTile(
       leading: Padding(
@@ -62,7 +91,7 @@ class _GonderiKartState extends State<GonderiKart> {
       ),
       trailing: IconButton(
         icon: Icon(Icons.more_vert),
-        onPressed: () {},
+        onPressed: gonderiSecenekleri,
       ),
       contentPadding: EdgeInsets.all(0.0),
     );

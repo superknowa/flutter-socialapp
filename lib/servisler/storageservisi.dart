@@ -28,5 +28,18 @@ Future<String> profiliResmiYukle(File resimDosyasi) async {
 }
 
 
+void gonderiResmiSil(String gonderiResmiUrl){
+
+     RegExp kural = RegExp(r'gonderi_.+\.jpg');
+     
+     var eslesme = kural.firstMatch(gonderiResmiUrl);
+     String dosyaAdi = eslesme[0];
+     
+      if(dosyaAdi!= null){
+        _storage.child("resimler/gonderiler/$dosyaAdi").delete();
+      }
+}
+
+
 
 }
