@@ -378,4 +378,19 @@ class FireStoreServisi {
 
 
   }
+
+
+  Future<List<Gonderi>> akislariGetir(kullaniciId) async {
+    QuerySnapshot snapshot = await _firestore
+        .collection("akis")
+        .document(kullaniciId)
+        .collection("kullaniciAkis")
+        .getDocuments();
+
+    List<Gonderi> gonderiler =
+        snapshot.documents.map((doc) => Gonderi.dokumandanUret(doc)).toList();
+    return gonderiler;
+  }
+
+
 }
