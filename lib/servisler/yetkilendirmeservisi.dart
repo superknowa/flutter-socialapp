@@ -54,4 +54,12 @@ class YetkilendirmeServisi {
   }
 
 
+  Future<void> sifremiSifirla(String eposta) async {
+    return await _firebaseAuth.sendPasswordResetEmail(email: eposta);
+  }
+
+
+
+
+
 }
