@@ -19,7 +19,9 @@ exports.takipGerceklesti = functions.firestore
     gonderilerSnapshot.forEach(doc => {
 
       if (doc.exists) {
-        admin.firestore().collection("akis").doc(takipciId).collection("kullaniciAkis").doc(doc.id).set(doc.data());
+        const gonderiId = doc.id;
+        const gonderiData = doc.data();
+        admin.firestore().collection("akis").doc(takipciId).collection("kullaniciAkis").doc(gonderiId).set(gonderiData);
       }
 
     });
@@ -58,13 +60,66 @@ exports.takiptenCikildi = functions.firestore
     //Adresteki bilgileri değişkenlere aldık.
     const kullaniciId = context.params.kullaniciId;
     const gonderiId = context.params.gonderiId;
-
+    const eklenenKayit = snapshot.data();
     
     const takipcilerSnapshot = await admin.firestore().collection("takipciler").doc(kullaniciId).collection("kullanicininTakipcileri").get();
 
     takipcilerSnapshot.forEach(doc=>{
+      const takipciId = doc.id;
+      admin.firestore().collection("akis").doc(takipciId).collection("kullaniciAkis").doc(gonderiId).set(eklenenKayit);
 
-      admin.firestore().collection("akis").doc(doc.id).collection("kullaniciAkis").doc(gonderiId).set(snapshot.data());
+    });
+
+
+  });
+
+
+  exports.gonderiGuncellendi = functions.firestore
+  .document("gonderiler/{kullaniciId}/kullaniciGonderileri/{gonderiId}")
+  .onUpdate(async (snapshot, context) => {
+
+    //Adresteki bilgileri değişkenlere aldık.
+    const kullaniciId = context.params.kullaniciId;
+    const gonderiId = context.params.gonderiId;
+    const guncellenmisGonderi = snapshot.after.data();
+    
+
+    //console.log("Açıklama: " + guncellenmisGonderi.aciklama);
+    //const guncellenmemisGonderi = snapshot.before.data();
+    
+    
+    const takipcilerSnapshot = await admin.firestore().collection("takipciler").doc(kullaniciId).collection("kullanicininTakipcileri").get();
+
+    takipcilerSnapshot.forEach(async takipciDoc=>{
+      const takipciId = takipciDoc.id;
+      const akisDoc = await admin.firestore().collection("akis").doc(takipciId).collection("kullaniciAkis").doc(gonderiId).get();
+      if(akisDoc.exists){
+        akisDoc.ref.update(guncellenmisGonderi);
+      }
+
+    });
+
+
+  });
+
+
+  exports.gonderiSilindi= functions.firestore
+  .document("gonderiler/{kullaniciId}/kullaniciGonderileri/{gonderiId}")
+  .onDelete(async (snapshot, context) => {
+
+    
+    const kullaniciId = context.params.kullaniciId;
+    const gonderiId = context.params.gonderiId;
+    
+    
+    const takipcilerSnapshot = await admin.firestore().collection("takipciler").doc(kullaniciId).collection("kullanicininTakipcileri").get();
+
+    takipcilerSnapshot.forEach(async takipciDoc=>{
+      const takipciId = takipciDoc.id;
+      const akisDoc = await admin.firestore().collection("akis").doc(takipciId).collection("kullaniciAkis").doc(gonderiId).get();
+      if(akisDoc.exists){
+        akisDoc.ref.delete();
+      }
 
     });
 
