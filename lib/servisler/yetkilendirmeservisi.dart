@@ -17,15 +17,15 @@ class YetkilendirmeServisi {
   }
 
   Future<Kullanici> mailIleGiris(String eposta, String sifre) async {
-    final girisSonucu = await _firebaseAuth.signInWithEmailAndPassword(
+    final girisKarti = await _firebaseAuth.signInWithEmailAndPassword(
         email: eposta, password: sifre);
-    return _kullaniciOlustur(girisSonucu.user);
+    return _kullaniciOlustur(girisKarti.user);
   }
 
   Future<Kullanici> mailIleKayit(String eposta, String sifre) async {
-    final girisSonucu = await _firebaseAuth.createUserWithEmailAndPassword(
+    final girisKarti = await _firebaseAuth.createUserWithEmailAndPassword(
         email: eposta, password: sifre);
-    return _kullaniciOlustur(girisSonucu.user);
+    return _kullaniciOlustur(girisKarti.user);
   }
 
   Stream<Kullanici> get durumTakipcisi {
@@ -46,10 +46,10 @@ class YetkilendirmeServisi {
       idToken: googleYetkiKartim.idToken,
     );
 
-    AuthResult girisSonucu =
+    AuthResult girisKarti =
         await FirebaseAuth.instance.signInWithCredential(authGirisKarti);
 
-    return _kullaniciOlustur(girisSonucu.user);
+    return _kullaniciOlustur(girisKarti.user);
 
   }
 
