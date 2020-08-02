@@ -78,42 +78,38 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
           Row(
             children: <Widget>[
               Expanded(
-                child: InkWell(
-                  onTap: _hesapOlustur,
-                  child: Container(
-                    alignment: Alignment.center,
-                    height: 40.0,
-                    color: Theme.of(context).primaryColor,
-                    child: Text(
-                      "Hesap Oluştur",
-                      style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
+                child: FlatButton(
+                  onPressed: _hesapOlustur,
+                  child: Text(
+                    "Hesap Oluştur",
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   ),
+                  color: Theme.of(context).primaryColor,
+                  textColor: Colors.white,
                 ),
               ),
               SizedBox(
                 width: 10.0,
               ),
               Expanded(
-                child: InkWell(
-                  onTap: _girisYap,
-                  child: Container(
-                    alignment: Alignment.center,
-                    height: 40.0,
-                    color: Theme.of(context).primaryColorDark,
-                    child: Text(
-                      "Giriş Yap",
-                      style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
+                child: FlatButton(
+                  onPressed: _girisYap,
+                  child: Text(
+                    "Giriş Yap",
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   ),
+                  color: Theme.of(context).primaryColorDark,
+                  textColor: Colors.white,
                 ),
-              )
+              ),
             ],
           ),
           SizedBox(
@@ -141,14 +137,16 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
           SizedBox(
             height: 20.0,
           ),
-          Align(alignment: Alignment.center, child: GestureDetector(
-            onTap: (){
-               Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => SifremiUnuttum()));
-            },
-            child: Text("Şifremi Unuttum"))),
+          Align(
+              alignment: Alignment.center,
+              child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SifremiUnuttum()));
+                  },
+                  child: Text("Şifremi Unuttum"))),
         ],
       ),
     );
@@ -194,14 +192,17 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
 
     try {
       Kullanici kullanici = await _yetkilendirmeServisi.googleIleGiris();
-      if(kullanici != null){
+      if (kullanici != null) {
+        Kullanici firestoreKullanici =
+            await FireStoreServisi().kullaniciGetir(kullanici.id);
 
-        Kullanici firestoreKullanici = await FireStoreServisi().kullaniciGetir(kullanici.id);
-
-        if(firestoreKullanici==null){
-          FireStoreServisi().kullaniciOlustur(id: kullanici.id,kullaniciAdi: kullanici.kullaniciAdi, email: kullanici.email, fotoUrl: kullanici.fotoUrl );
+        if (firestoreKullanici == null) {
+          FireStoreServisi().kullaniciOlustur(
+              id: kullanici.id,
+              kullaniciAdi: kullanici.kullaniciAdi,
+              email: kullanici.email,
+              fotoUrl: kullanici.fotoUrl);
         }
-
       }
     } catch (err) {
       setState(() {
