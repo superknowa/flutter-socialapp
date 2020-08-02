@@ -13,22 +13,10 @@ class MyApp extends StatelessWidget {
           create: (_) => YetkilendirmeServisi(),
           child: MaterialApp(
         title: 'Flutter Demo',
-        home: MyHomePage(),
+        home: Yonlendirme(),
         debugShowCheckedModeBanner: false,
       ),
     );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Yonlendirme();
   }
 }
 
