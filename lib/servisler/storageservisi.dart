@@ -10,8 +10,8 @@ String resimId;
 
 Future<String> gonderiResmiYukle(File resimDosyasi) async {
     resimId = Uuid().v4();
-    StorageUploadTask yuklemeTakibi = _storage.child("resimler/gonderiler/gonderi_$resimId.jpg").putFile(resimDosyasi);
-    StorageTaskSnapshot snapshot = await yuklemeTakibi.onComplete;
+    StorageUploadTask yuklemeYoneticisi = _storage.child("resimler/gonderiler/gonderi_$resimId.jpg").putFile(resimDosyasi);
+    StorageTaskSnapshot snapshot = await yuklemeYoneticisi.onComplete;
     String yuklenenResimUrl = await snapshot.ref.getDownloadURL();
     return yuklenenResimUrl;
 }
