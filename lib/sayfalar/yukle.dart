@@ -19,7 +19,7 @@ class _YukleState extends State<Yukle> {
   TextEditingController konumTextKumandasi  = TextEditingController();
 
   @override
-  Widget build(BuildContext contextaaa) {
+  Widget build(BuildContext context) {
     return dosya == null ? yukleButonu() : gonderiFormu();
   }
 
