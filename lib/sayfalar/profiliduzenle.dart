@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -45,7 +44,7 @@ bool _yukleniyor = false;
           child: CircleAvatar(
             backgroundColor: Colors.grey[300],
         backgroundImage: _secilmisFoto == null ?  (widget.profil.fotoUrl.isNotEmpty
-                      ? CachedNetworkImageProvider(widget.profil.fotoUrl)
+                      ? NetworkImage(widget.profil.fotoUrl)
                       : AssetImage("assets/male.png")) : FileImage(_secilmisFoto),
         radius: 55.0,
       ),

@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -75,7 +74,7 @@ class _DuyurularState extends State<Duyurular> {
               },
                           child: CircleAvatar(
                 backgroundImage:
-                    CachedNetworkImageProvider(aktiviteYapan.fotoUrl,),
+                    NetworkImage(aktiviteYapan.fotoUrl,),
               ),
             ),
             title: RichText(
@@ -120,7 +119,7 @@ class _DuyurularState extends State<Duyurular> {
           height: 50.0,
           decoration: BoxDecoration(
               image: DecorationImage(
-                  image: CachedNetworkImageProvider(gonderiFoto),
+                  image: NetworkImage(gonderiFoto),
                   fit: BoxFit.cover)),
         ),
       );

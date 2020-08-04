@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -89,7 +88,7 @@ class _AraState extends State<Ara> {
           },
           child: ListTile(
         leading: CircleAvatar(
-          backgroundImage: CachedNetworkImageProvider(kullanici.fotoUrl),
+          backgroundImage: NetworkImage(kullanici.fotoUrl),
         ),
         title: Text(kullanici.kullaniciAdi,style: TextStyle(fontWeight: FontWeight.w500),),
       ),

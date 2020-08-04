@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:socialapp/modeller/gonderi.dart';
@@ -88,7 +87,7 @@ class _GonderiKartState extends State<GonderiKart> {
           child: CircleAvatar(
             backgroundColor: Colors.blue,
             backgroundImage:
-                CachedNetworkImageProvider(widget.yayinlayan.fotoUrl),
+                NetworkImage(widget.yayinlayan.fotoUrl),
           ),
         ),
       ),
@@ -122,7 +121,7 @@ class _GonderiKartState extends State<GonderiKart> {
         height: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
             image: DecorationImage(
-          image: CachedNetworkImageProvider(
+          image: NetworkImage(
             widget.gonderi.gonderResimiUrl,
           ),
           fit: BoxFit.cover,
