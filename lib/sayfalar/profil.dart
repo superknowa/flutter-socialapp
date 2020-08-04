@@ -82,6 +82,7 @@ class _ProfilState extends State<Profil> {
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Row(
             children: <Widget>[
@@ -109,20 +110,16 @@ class _ProfilState extends State<Profil> {
           SizedBox(
             height: 10.0,
           ),
-          Container(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                profilData.kullaniciAdi,
-                style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
-              )),
+          Text(
+            profilData.kullaniciAdi,
+            style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
+          ),
           SizedBox(
             height: 5.0,
           ),
-          Container(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                profilData.hakkinda,
-              )),
+          Text(
+            profilData.hakkinda,
+          ),
           SizedBox(
             height: 25.0,
           ),

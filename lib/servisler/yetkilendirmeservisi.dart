@@ -41,13 +41,13 @@ class YetkilendirmeServisi {
     GoogleSignInAuthentication googleYetkiKartim =
         await googleHesabi.authentication;
 
-    AuthCredential authGirisKarti = GoogleAuthProvider.getCredential(
+    AuthCredential sifresizGirisBelgesi = GoogleAuthProvider.getCredential(
       accessToken: googleYetkiKartim.accessToken,
       idToken: googleYetkiKartim.idToken,
     );
 
     AuthResult girisKarti =
-        await FirebaseAuth.instance.signInWithCredential(authGirisKarti);
+        await _firebaseAuth.signInWithCredential(sifresizGirisBelgesi);
 
     return _kullaniciOlustur(girisKarti.user);
 

@@ -115,14 +115,11 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
           SizedBox(
             height: 20.0,
           ),
-          Align(alignment: Alignment.center, child: Text("veya")),
+          Center( child: Text("veya")),
           SizedBox(
             height: 20.0,
           ),
-          Container(
-            alignment: Alignment.center,
-            width: double.infinity,
-            height: 40.0,
+          Center(
             child: GestureDetector(
               onTap: _googleIleGiris,
               child: Text(
