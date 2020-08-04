@@ -30,7 +30,7 @@ class _YukleState extends State<Yukle> {
           size: 50.0,
         ),
         onPressed: () {
-          fotografSec(context);
+          fotografSec();
         });
   }
 
@@ -136,9 +136,9 @@ class _YukleState extends State<Yukle> {
     });
   }
 
-  fotografSec(ustContext) {
+  fotografSec() {
     showDialog(
-        context: ustContext,
+        context: context,
         builder: (context) {
           return SimpleDialog(
             title: Text("Gönderi Oluştur"),
