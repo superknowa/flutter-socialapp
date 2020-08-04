@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:socialapp/modeller/gonderi.dart';
@@ -90,21 +89,17 @@ class _ProfilState extends State<Profil> {
                   backgroundColor: Colors.grey[300],
                   radius: 50.0,
                   backgroundImage: profilData.fotoUrl.isNotEmpty
-                      ? CachedNetworkImageProvider(profilData.fotoUrl)
+                      ? NetworkImage(profilData.fotoUrl)
                       : AssetImage("assets/male.png")),
               Expanded(
-                  child: Column(
-                children: <Widget>[
-                  Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       _profilSayac(baslik: "Gönderiler", sayi: _gonderiSayisi),
                       _profilSayac(baslik: "Takipçi", sayi: _takipci),
                       _profilSayac(baslik: "Takip", sayi: _takipEdilen),
                     ],
-                  )
-                ],
-              ))
+                  ))
             ],
           ),
           SizedBox(
@@ -274,7 +269,7 @@ class _ProfilState extends State<Profil> {
     
     return GridTile(
             child: Image(
-          image: CachedNetworkImageProvider(gonderi.gonderResimiUrl),
+          image: NetworkImage(gonderi.gonderResimiUrl),
           fit: BoxFit.cover,
         ),
     );
