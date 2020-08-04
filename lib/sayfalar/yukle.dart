@@ -63,12 +63,8 @@ class _YukleState extends State<Yukle> {
                 ),
           AspectRatio(
             aspectRatio: 16.0 / 9.0,
-            child: Container(
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: FileImage(dosya), fit: BoxFit.fill)),
+            child: Image.file(dosya,fit: BoxFit.cover,),
             ),
-          ),
           SizedBox(height: 20.0),
           TextFormField(
             controller: aciklamaTextKumandasi,
