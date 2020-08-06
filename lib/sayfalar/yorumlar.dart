@@ -21,6 +21,12 @@ class _YorumlarState extends State<Yorumlar> {
 
   TextEditingController _yorumKontrolcusu = TextEditingController();
 
+  @override
+  void initState() { 
+    super.initState();
+    timeago.setLocaleMessages('tr', timeago.TrMessages());
+  }
+
 
   yorumSatiri(Yorum yorum){
     return FutureBuilder<Kullanici>(
