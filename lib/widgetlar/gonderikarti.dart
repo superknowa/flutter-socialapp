@@ -117,7 +117,12 @@ class _GonderiKartState extends State<GonderiKart> {
   gonderiResmi() {
     return GestureDetector(
       onDoubleTap: begeniDegistir,
-      child: Image.network(widget.gonderi.gonderResimiUrl,height: MediaQuery.of(context).size.width,fit: BoxFit.cover,),
+      child: Image.network(
+        widget.gonderi.gonderResimiUrl, 
+        width: MediaQuery.of(context).size.width , 
+        height: MediaQuery.of(context).size.width,
+        fit: BoxFit.cover,
+        ),
     );
   }
 
