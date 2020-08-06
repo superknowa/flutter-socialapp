@@ -30,7 +30,7 @@ dependencies:
   image_picker: ^0.6.3+4
   firebase_storage: ^3.1.1
   uuid: ^2.0.4
-  timeago: ^2.0.26
+  timeago:
 
 dev_dependencies:
   flutter_test:
