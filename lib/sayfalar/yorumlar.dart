@@ -49,7 +49,7 @@ class _YorumlarState extends State<Yorumlar> {
               Text(yorum.icerik)
             ],
           ),
-          subtitle: Text(timeago.format(yorum.timestamp.toDate(), locale: 'tr'))
+          subtitle: Text(timeago.format(yorum.olusturulmaZamani.toDate(), locale: 'tr'))
         );
       }
     );

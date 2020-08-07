@@ -7,9 +7,9 @@ class Duyuru {
   final String gonderiId;
   final String gonderiFoto;
   final String yorum;
-  final Timestamp timestamp;
+  final Timestamp olusturulmaZamani;
 
-  Duyuru({this.id, this.aktiviteYapanId, this.aktiviteTipi, this.gonderiId, this.gonderiFoto, this.yorum, this.timestamp});
+  Duyuru({this.id, this.aktiviteYapanId, this.aktiviteTipi, this.gonderiId, this.gonderiFoto, this.yorum, this.olusturulmaZamani});
 
  
   factory Duyuru.dokumandanUret(DocumentSnapshot doc) {
@@ -20,7 +20,7 @@ class Duyuru {
       gonderiId: doc['gonderiId'],
       gonderiFoto: doc['gonderiFoto'],
       yorum: doc['yorum'],
-      timestamp: doc['timestamp'],
+      olusturulmaZamani: doc['olusturulmaZamani'],
     );
   }
   

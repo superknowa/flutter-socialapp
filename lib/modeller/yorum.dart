@@ -4,16 +4,16 @@ class Yorum {
   final String id;
   final String icerik;
   final String yayinlayanId;
-  final Timestamp timestamp;
+  final Timestamp olusturulmaZamani;
 
-  Yorum({this.id, this.icerik, this.yayinlayanId, this.timestamp});
+  Yorum({this.id, this.icerik, this.yayinlayanId, this.olusturulmaZamani});
 
   factory Yorum.dokumandanUret(DocumentSnapshot doc) {
     return Yorum(
       id: doc.documentID, //Bu kısmı anlat
       icerik: doc['icerik'],
       yayinlayanId: doc['yayinlayanId'],
-      timestamp: doc['timestamp'],
+      olusturulmaZamani: doc['olusturulmaZamani'],
     );
   }
 }

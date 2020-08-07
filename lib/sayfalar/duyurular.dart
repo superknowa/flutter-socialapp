@@ -22,6 +22,7 @@ class _DuyurularState extends State<Duyurular> {
   @override
   void initState() {
     super.initState();
+    timeago.setLocaleMessages('tr', timeago.TrMessages());
     _aktifKullaniciId =
         Provider.of<YetkilendirmeServisi>(context, listen: false)
             .aktifKullaniciId;
@@ -99,7 +100,7 @@ class _DuyurularState extends State<Duyurular> {
                 ],
               ),
             ),
-            subtitle: Text(timeago.format(duyuru.timestamp.toDate(), locale: 'tr')),
+            subtitle: Text(timeago.format(duyuru.olusturulmaZamani.toDate(), locale: 'tr')),
             trailing: gonderiGorsel(duyuru.aktiviteTipi, duyuru.gonderiFoto, duyuru.gonderiId),
           );
         });
