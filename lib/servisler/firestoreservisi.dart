@@ -60,6 +60,7 @@ class FireStoreServisi {
       "yayinlayanId": yayinlayanId,
       "begeniSayisi": 0,
       "konum": konum,
+      "timestamp": timestamp,
     });
   }
 
@@ -68,6 +69,7 @@ class FireStoreServisi {
         .collection("gonderiler")
         .document(kullaniciId)
         .collection("kullaniciGonderileri")
+        .orderBy("timestamp", descending: true)
         .getDocuments();
 
     List<Gonderi> gonderiler =
