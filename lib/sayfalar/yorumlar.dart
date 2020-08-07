@@ -45,7 +45,7 @@ class _YorumlarState extends State<Yorumlar> {
           ),
           title: Row(
             children: <Widget>[
-              Text("${yayinlayan.kullaniciAdi}}:",style: TextStyle(fontWeight: FontWeight.bold),),
+              Text("${yayinlayan.kullaniciAdi}: ",style: TextStyle(fontWeight: FontWeight.bold),),
               Text(yorum.icerik)
             ],
           ),
