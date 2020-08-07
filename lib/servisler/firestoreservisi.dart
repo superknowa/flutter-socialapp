@@ -6,15 +6,15 @@ import 'package:socialapp/servisler/storageservisi.dart';
 
 class FireStoreServisi {
   final Firestore _firestore = Firestore.instance;
-  final DateTime timestamp = DateTime.now();
+  final DateTime zaman = DateTime.now();
 
   Future<void> kullaniciOlustur({id, email, kullaniciAdi, fotoUrl = ""}) async {
     await _firestore.collection("kullanicilar").document(id).setData({
-      "username": kullaniciAdi,
-      "photoUrl": fotoUrl,
+      "kullaniciAdi": kullaniciAdi,
+      "fotoUrl": fotoUrl,
       "email": email,
-      "bio": "",
-      "timestamp": timestamp
+      "hakkinda": "",
+      "olusturulmaZamani": zaman
     });
   }
 
@@ -60,7 +60,7 @@ class FireStoreServisi {
       "yayinlayanId": yayinlayanId,
       "begeniSayisi": 0,
       "konum": konum,
-      "timestamp": timestamp,
+      "olusturulmaZamani": zaman,
     });
   }
 
@@ -69,7 +69,7 @@ class FireStoreServisi {
         .collection("gonderiler")
         .document(kullaniciId)
         .collection("kullaniciGonderileri")
-        .orderBy("timestamp", descending: true)
+        .orderBy("olusturulmaZamani", descending: true)
         .getDocuments();
 
     List<Gonderi> gonderiler =
@@ -162,7 +162,7 @@ class FireStoreServisi {
         .collection("yorumlar")
         .document(gonderiId)
         .collection("gonderiYorumlari")
-        .orderBy('timestamp', descending: true)
+        .orderBy('olusturulmaZamani', descending: true)
         .snapshots();
   }
 
@@ -174,7 +174,7 @@ class FireStoreServisi {
         .add({
       "icerik": icerik,
       "yayinlayanId": aktifKullaniciId,
-      "timestamp": timestamp,
+      "olusturulmaZamani": zaman,
     });
 
     //Yorum duyurusunu gönderi sahibine iletiyoruz.
@@ -192,16 +192,16 @@ class FireStoreServisi {
       String fotoUrl = "",
       String hakkinda}) {
     _firestore.collection("kullanicilar").document(kullaniciId).updateData({
-      "username": kullaniciAdi,
-      "photoUrl": fotoUrl,
-      "bio": hakkinda,
+      "kullaniciAdi": kullaniciAdi,
+      "fotoUrl": fotoUrl,
+      "hakkinda": hakkinda,
     });
   }
 
   Future<List<Kullanici>> kullaniciAra(String kelime) async {
     QuerySnapshot snapshot = await _firestore
         .collection("kullanicilar")
-        .where("username", isGreaterThanOrEqualTo: kelime)
+        .where("kullaniciAdi", isGreaterThanOrEqualTo: kelime)
         .getDocuments();
 
     List<Kullanici> kullanicilar =
@@ -295,7 +295,7 @@ class FireStoreServisi {
       "gonderiId": gonderi?.id,
       "gonderiFoto": gonderi?.gonderResimiUrl,
       "yorum": yorum,
-      "timestamp": timestamp
+      "olusturulmaZamani": zaman
     });
   }
 
@@ -304,7 +304,7 @@ class FireStoreServisi {
         .collection("duyurular")
         .document(kullaniciId)
         .collection("kullanicininDuyurulari")
-        .orderBy('timestamp', descending: true)
+        .orderBy('olusturulmaZamani', descending: true)
         .limit(20) //Son 20 duyuruyu getirdi
         .getDocuments();
 

@@ -26,10 +26,10 @@ class Kullanici {
   factory Kullanici.dokumandanUret(DocumentSnapshot doc) {
     return Kullanici(
       id : doc.documentID,
-      kullaniciAdi: doc['username'],
+      kullaniciAdi: doc['kullaniciAdi'],
       email: doc['email'],
-      fotoUrl: doc['photoUrl'],
-      hakkinda: doc['bio'],
+      fotoUrl: doc['fotoUrl'],
+      hakkinda: doc['hakkinda'],
     );
   }
 
