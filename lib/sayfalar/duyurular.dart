@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:socialapp/modeller/duyurular.dart';
+import 'package:socialapp/modeller/duyuru.dart';
 import 'package:socialapp/modeller/kullanici.dart';
 import 'package:socialapp/sayfalar/profil.dart';
 import 'package:socialapp/sayfalar/tekligonderi.dart';
