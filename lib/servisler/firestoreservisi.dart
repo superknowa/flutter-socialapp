@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:socialapp/modeller/duyurular.dart';
+import 'package:socialapp/modeller/duyuru.dart';
 import 'package:socialapp/modeller/gonderi.dart';
 import 'package:socialapp/modeller/kullanici.dart';
 import 'package:socialapp/servisler/storageservisi.dart';

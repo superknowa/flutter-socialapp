@@ -6,7 +6,6 @@ class YetkilendirmeServisi {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   String aktifKullaniciId;
 
-  //Bunu private yaptım çünkü dışarıdan çağırılmayacak sadece sınıf elemanları kullanacak.
   Kullanici _kullaniciOlustur(FirebaseUser kullanici) {
     return kullanici == null ? null : Kullanici.firebasedenUret(kullanici);
   }
