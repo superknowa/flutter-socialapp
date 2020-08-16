@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
     return Provider<YetkilendirmeServisi>(
           create: (_) => YetkilendirmeServisi(),
           child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Flutter Demo1',
         home: Yonlendirme(),
         debugShowCheckedModeBanner: false,
       ),
