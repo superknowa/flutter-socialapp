@@ -1,6 +1,6 @@
 # socialapp
 
-A new Flutter project.
+Sosyal medya çalışması.
 
 ## Getting Started
 
