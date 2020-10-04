@@ -8,104 +8,102 @@ class SifremiUnuttum extends StatefulWidget {
 }
 
 class _SifremiUnuttumState extends State<SifremiUnuttum> {
+  bool yukleniyor = false;
   final _formAnahtari = GlobalKey<FormState>();
   final _scaffoldAnahtari = GlobalKey<ScaffoldState>();
   String email;
-  bool yukleniyor = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: _scaffoldAnahtari,
-        appBar: AppBar(
-          title: Text(
-            "Şifremi Sıfırla"),
+      key: _scaffoldAnahtari,
+      appBar: AppBar(
+        title: Text("Şifremi Sıfırla"),
+      ),
+      body: ListView(
+        children: <Widget>[
+          yukleniyor ? LinearProgressIndicator() : SizedBox(height: 0.0,),
+          SizedBox(height: 20.0),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Form(
+              key: _formAnahtari,
+              child: Column(
+                children: <Widget>[
+                  
+        
+                  TextFormField(
+            keyboardType: TextInputType.emailAddress,
+            decoration: InputDecoration(
+              hintText: "Email adresinizi girin",
+              labelText: "Mail:",
+              errorStyle: TextStyle(fontSize: 16.0),
+              prefixIcon: Icon(Icons.mail),
+            ),
+            validator: (girilenDeger) {
+              if (girilenDeger.isEmpty) {
+                return "Email alanı boş bırakılamaz!";
+              } else if (!girilenDeger.contains("@")) {
+                return "Girilen değer mail formatında olmalı!";
+              }
+              return null;
+            },
+            onSaved: (girilenDeger) => email = girilenDeger,
         ),
-        body: ListView(
-          children: <Widget>[
-            yukleniyor
-                ? LinearProgressIndicator()
-                : SizedBox(
-                    height: 0.0,
-                  ),
-            SizedBox(height: 20.0),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Form(
-                key: _formAnahtari,
-                child: Column(
-                  children: <Widget>[
-                    TextFormField(
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: InputDecoration(
-                            hintText: "Mail adresinizi girin",
-                            labelText: "E-Posta:",
-                            errorStyle: TextStyle(fontSize: 16.0),
-                            prefixIcon: Icon(Icons.lock)),
-                        validator: (girilenDeger) {
-                          if (girilenDeger.isEmpty) {
-                            return 'Mail adresi boş bırakılamaz!';
-                          } else if (!girilenDeger.contains("@")) {
-                            return 'Girilen değer mail formatında olmalı!';
-                          }
-                          return null;
-                        },
-                        onSaved: (girilenDeger) => email = girilenDeger),
-                    SizedBox(
-                      height: 50.0,
-                    ),
-                    InkWell(
-                      onTap: _sifreyiSifirla,
-                      child: Container(
-                        alignment: Alignment.center,
-                        height: 40.0,
-                        width: double.infinity,
-                        color: Theme.of(context).primaryColorDark,
-                        child: Text(
-                          "Şifremi Sıfırla",
-                          style: TextStyle(
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
-                        ),
+        
+        
+        SizedBox(height: 50.0,),
+        Container(
+            width: double.infinity,
+            child: FlatButton(
+                    onPressed: _sifreyiSifirla,
+                    child: Text(
+                      "Şifremi Sıfırla",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
                       ),
-                    )
-                  ],
-                ),
+                    ),
+                    color: Theme.of(context).primaryColor,
+                    textColor: Colors.white,
+                  ),
+        ),
+                ],
+              )
               ),
-            )
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 
-  _sifreyiSifirla() async {
-
+  void _sifreyiSifirla() async {
     final _yetkilendirmeServisi = Provider.of<YetkilendirmeServisi>(context, listen: false);
+    
+    var _formState = _formAnahtari.currentState;
 
-    final _formState = _formAnahtari.currentState;
-
-    if (_formState.validate()) {
+    if(_formState.validate()){
       _formState.save();
-
       setState(() {
         yukleniyor = true;
       });
-
+      
       try {
-        
         await _yetkilendirmeServisi.sifremiSifirla(email);
         Navigator.pop(context);
-
-      } catch (err) {
+      } catch(hata) {
         setState(() {
-        yukleniyor = false;
-      });
-        uyariGoster(hataKodu: err.code);
+          yukleniyor = false;
+        });
+        uyariGoster(hataKodu: hata.code);
       }
+
+      
     }
+                      
   }
 
-  uyariGoster({hataKodu}) {
+  uyariGoster({hataKodu}){
     String hataMesaji;
 
     if (hataKodu == "ERROR_INVALID_EMAIL") {
@@ -114,7 +112,9 @@ class _SifremiUnuttumState extends State<SifremiUnuttum> {
       hataMesaji = "Bu mailde bir kullanıcı bulunmuyor";
     }
 
-    final snackBar = SnackBar(content: Text(hataMesaji));
+    var snackBar = SnackBar(content: Text(hataMesaji));
     _scaffoldAnahtari.currentState.showSnackBar(snackBar);
+
   }
+
 }

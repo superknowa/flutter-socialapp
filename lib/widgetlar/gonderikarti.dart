@@ -7,34 +7,32 @@ import 'package:socialapp/sayfalar/yorumlar.dart';
 import 'package:socialapp/servisler/firestoreservisi.dart';
 import 'package:socialapp/servisler/yetkilendirmeservisi.dart';
 
-class GonderiKart extends StatefulWidget {
+class GonderiKarti extends StatefulWidget {
   final Gonderi gonderi;
   final Kullanici yayinlayan;
 
-  const GonderiKart({this.gonderi, this.yayinlayan});
-
+  const GonderiKarti({Key key, this.gonderi, this.yayinlayan}) : super(key: key);
+  
   @override
-  _GonderiKartState createState() => _GonderiKartState();
+  _GonderiKartiState createState() => _GonderiKartiState();
 }
 
-class _GonderiKartState extends State<GonderiKart> {
+class _GonderiKartiState extends State<GonderiKarti> {
   int _begeniSayisi = 0;
   bool _begendin = false;
-  String aktifKullaniciId;
+  String _aktifKullaniciId;
 
   @override
-  void initState() {
+  void initState() { 
     super.initState();
-    aktifKullaniciId = Provider.of<YetkilendirmeServisi>(context, listen: false)
-        .aktifKullaniciId;
+    _aktifKullaniciId = Provider.of<YetkilendirmeServisi>(context, listen: false).aktifKullaniciId;
     _begeniSayisi = widget.gonderi.begeniSayisi;
-    begeniVarMi();
+    begeniVarmi();
   }
 
-  begeniVarMi() async {
-    bool begeniVarMi = await FireStoreServisi().begeniVarmi(
-        aktifKullaniciId: aktifKullaniciId, gonderi: widget.gonderi);
-    if (begeniVarMi) {
+  begeniVarmi() async {
+    bool begeniVarmi = await FireStoreServisi().begeniVarmi(widget.gonderi, _aktifKullaniciId);
+    if(begeniVarmi){
       if (mounted) {
         setState(() {
           _begendin = true;
@@ -43,194 +41,139 @@ class _GonderiKartState extends State<GonderiKart> {
     }
   }
 
-  gonderiSecenekleri() {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return SimpleDialog(
-            title: Text("Seçiminiz nedir?"),
-            children: <Widget>[
-              SimpleDialogOption(
-                child: Text("Gönderiyi Sil"),
-                onPressed: () {
-                  FireStoreServisi().gonderiSil(
-                      aktifKullaniciId: aktifKullaniciId,
-                      gonderi: widget.gonderi);
-                  Navigator.pop(context);
-                },
-              ),
-              SimpleDialogOption(
-                child: Text("Vazgeç", style: TextStyle(color: Colors.red)),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              )
-            ],
-          );
-        });
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Column(
+        children: <Widget>[
+          _gonderiBasligi(),
+          _gonderiResmi(),
+          _gonderiAlt(),
+        ],
+      )
+    );
   }
 
-  gonderiBasligi() {
+  gonderiSecenekleri(){
+    showDialog(
+      context: context,
+      builder: (context){
+        return SimpleDialog(
+          title: Text("Seçiminiz nedir?"),
+          children: <Widget>[
+            SimpleDialogOption(
+              child: Text("Gönderiyi Sil"),
+              onPressed: (){
+                FireStoreServisi().gonderiSil(aktifKullaniciId: _aktifKullaniciId, gonderi: widget.gonderi);
+                Navigator.pop(context);
+              },
+            ),
+            SimpleDialogOption(
+              child: Text("Vazgeç", style: TextStyle(color: Colors.red),),
+              onPressed: (){
+                Navigator.pop(context);
+              },
+            )
+          ],
+        );
+      }
+      );
+  }
+
+  Widget _gonderiBasligi(){
     return ListTile(
       leading: Padding(
         padding: const EdgeInsets.only(left: 12.0),
         child: GestureDetector(
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => Profil(
-                          profilSahibiId: widget.gonderi.yayinlayanId,
-                          aktifKullaniciId: aktifKullaniciId,
-                        )));
+          onTap: (){
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Profil(profilSahibiId: widget.gonderi.yayinlayanId,)));
           },
-          child: CircleAvatar(
+                  child: CircleAvatar(
             backgroundColor: Colors.blue,
-            backgroundImage:
-                NetworkImage(widget.yayinlayan.fotoUrl),
+            backgroundImage: widget.yayinlayan.fotoUrl.isNotEmpty ? NetworkImage(widget.yayinlayan.fotoUrl) : AssetImage("assets/images/hayalet.png"),
           ),
         ),
       ),
       title: GestureDetector(
         onTap: (){
-          Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => Profil(
-                          profilSahibiId: widget.gonderi.yayinlayanId,
-                          aktifKullaniciId: aktifKullaniciId,
-                        )));
-        },
-              child: Text(
-          widget.yayinlayan.kullaniciAdi,
-          style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Profil(profilSahibiId: widget.gonderi.yayinlayanId,)));
+          },
+        child: Text(widget.yayinlayan.kullaniciAdi, style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold,),)
         ),
-      ),
-      trailing: aktifKullaniciId == widget.gonderi.yayinlayanId ? IconButton(
-        icon: Icon(Icons.more_vert),
-        onPressed: gonderiSecenekleri,
-      ):null,
+      trailing: _aktifKullaniciId == widget.gonderi.yayinlayanId ? IconButton(icon: Icon(Icons.more_vert), onPressed: ()=>gonderiSecenekleri()) : null,
       contentPadding: EdgeInsets.all(0.0),
     );
   }
 
-  gonderiResmi() {
+  Widget _gonderiResmi(){
     return GestureDetector(
-      onDoubleTap: begeniDegistir,
-      child: Image.network(
-        widget.gonderi.gonderResimiUrl, 
-        width: MediaQuery.of(context).size.width , 
+      onDoubleTap: _begeniDegistir,
+          child: Image.network(
+        widget.gonderi.gonderiResmiUrl,
+        width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.width,
         fit: BoxFit.cover,
-        ),
+      ),
     );
   }
 
-  gonderiAlt() {
+  Widget _gonderiAlt(){
     return Column(
-      crossAxisAlignment: CrossAxisAlignment
-          .start, //Sonda ekle beğeni yazısının sola kaydığı görülsün.
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             IconButton(
-              icon: _begendin
-                  ? Icon(
-                      Icons.favorite,
-                      color: Colors.red,
-                      size: 35.0,
-                    )
-                  : Icon(
-                      Icons.favorite_border,
-                      size: 35.0,
-                    ),
-              onPressed: begeniDegistir,
-            ),
-            IconButton(
-              icon: Icon(
-                Icons.comment,
-                size: 35.0,
+              icon: !_begendin ? Icon(Icons.favorite_border, size: 35.0,) : Icon(Icons.favorite, size: 35.0, color: Colors.red,), 
+              onPressed: _begeniDegistir
               ),
-              onPressed: yorumlaraGit,
-            )
+            IconButton(icon: Icon(Icons.comment, size: 35.0,), onPressed: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context) => Yorumlar(gonderi: widget.gonderi,)));
+            }),
           ],
         ),
         Padding(
           padding: const EdgeInsets.only(left: 8.0),
-          child: Text(
-            "$_begeniSayisi beğeni",
-            style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
-          ),
+          child: Text("$_begeniSayisi beğeni", style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold,)),
         ),
-        SizedBox(
-          height: 2.0,
-        ),
-        widget.gonderi.aciklama.isNotEmpty
-            ? Row(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 8.0,
-                      right: 8.0,
-                    ),
-                    child: Text(
-                      widget.yayinlayan.kullaniciAdi,
-                      style: TextStyle(
-                          fontSize: 15.0, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Expanded(child: Text(widget.gonderi.aciklama))
-                ],
+        SizedBox(height: 2.0,),
+        widget.gonderi.aciklama.isNotEmpty ? Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: RichText(
+            text: TextSpan(
+              text: widget.yayinlayan.kullaniciAdi + " ", 
+              style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.black),
+              children: [
+                TextSpan(
+                  text: widget.gonderi.aciklama,
+                  style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14.0,)
+                )
+              ]
               )
-            : SizedBox(
-                height: 0.0,
-              )
+            ),
+        ) : SizedBox(height: 0.0,)
       ],
     );
   }
 
-  yorumlaraGit() {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => Yorumlar(
-                  gonderi: widget.gonderi,
-                )));
-  }
-
-  begeniDegistir() {
-    if (_begendin) {
-      //Beğenmiş durumdasın, beğeniden çıkart
+  void _begeniDegistir(){
+    if(_begendin){
+      //Kullanıcı gönderiyi beğenmiş durumda, öyleyse beğeniyi kaldıracak kodları çalıştıralım.
       setState(() {
         _begendin = false;
         _begeniSayisi = _begeniSayisi - 1;
       });
-
-      FireStoreServisi().gonderiBegeniKaldir(
-          aktifKullaniciId: aktifKullaniciId, gonderi: widget.gonderi);
+      FireStoreServisi().gonderiBegeniKaldir(widget.gonderi, _aktifKullaniciId);
     } else {
-      //Henüz beğenmemişsin, beğen
+      //Kullanıcı gönderiyi beğenmemiş, beğeni ekleyen kodları çalıştıralım.
       setState(() {
         _begendin = true;
         _begeniSayisi = _begeniSayisi + 1;
       });
-      FireStoreServisi().gonderiBegen(
-          aktifKullaniciId: aktifKullaniciId, gonderi: widget.gonderi);
+      FireStoreServisi().gonderiBegen(widget.gonderi, _aktifKullaniciId);
     }
   }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        gonderiBasligi(),
-        gonderiResmi(),
-        gonderiAlt(),
-        SizedBox(
-          height: 10.0,
-        )
-      ],
-    );
-  }
+  
 }

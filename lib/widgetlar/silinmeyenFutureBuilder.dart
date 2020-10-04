@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 
 class SilinmeyenFutureBuilder extends StatefulWidget {
+  final Future future;
+  final AsyncWidgetBuilder builder;
 
- final Future future;
- final AsyncWidgetBuilder builder;
-
-  SilinmeyenFutureBuilder({
-    this.future,
-    this.builder
-  });
+  const SilinmeyenFutureBuilder({Key key, this.future, this.builder}) : super(key: key);
 
   @override
   _SilinmeyenFutureBuilderState createState() => _SilinmeyenFutureBuilderState();
@@ -16,8 +12,8 @@ class SilinmeyenFutureBuilder extends StatefulWidget {
 
 class _SilinmeyenFutureBuilderState extends State<SilinmeyenFutureBuilder> with AutomaticKeepAliveClientMixin<SilinmeyenFutureBuilder> {
 
- @override
- bool get wantKeepAlive => true;
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {

@@ -9,28 +9,26 @@ import 'package:socialapp/widgetlar/gonderikarti.dart';
 
 class Profil extends StatefulWidget {
   final String profilSahibiId;
-  final String aktifKullaniciId;
 
-  Profil({this.profilSahibiId, this.aktifKullaniciId});
+  const Profil({Key key, this.profilSahibiId}) : super(key: key);
 
   @override
   _ProfilState createState() => _ProfilState();
 }
 
 class _ProfilState extends State<Profil> {
-  int _gonderiSayisi = 0; //Tüm global değişkenleri alt çizgili yapalım.
+  int _gonderiSayisi = 0;
   int _takipci = 0;
   int _takipEdilen = 0;
   List<Gonderi> _gonderiler = [];
   String gonderiStili = "liste";
+  String _aktifKullaniciId;
   Kullanici _profilSahibi;
   bool _takipEdildi = false;
 
   _takipciSayisiGetir() async {
-    final takipciSayisi =
-        await FireStoreServisi().takipciSayisi(widget.profilSahibiId);
-
-    if (mounted) {    
+    int takipciSayisi = await FireStoreServisi().takipciSayisi(widget.profilSahibiId);
+    if (mounted) {
       setState(() {
         _takipci = takipciSayisi;
       });
@@ -38,10 +36,8 @@ class _ProfilState extends State<Profil> {
   }
 
   _takipEdilenSayisiGetir() async {
-    final takipEdilenSayisi =
-        await FireStoreServisi().takipEdileniSayisi(widget.profilSahibiId);
-
-    if (mounted) {     
+    int takipEdilenSayisi = await FireStoreServisi().takipEdilenSayisi(widget.profilSahibiId);
+    if (mounted) {
       setState(() {
         _takipEdilen = takipEdilenSayisi;
       });
@@ -49,11 +45,8 @@ class _ProfilState extends State<Profil> {
   }
 
   _gonderileriGetir() async {
-    List<Gonderi> gonderiler =
-        await FireStoreServisi().gonderileriGetir(widget.profilSahibiId);
-    print("Gönderi sayısı: ${gonderiler.length}");
-
-    if (mounted) { 
+    List<Gonderi> gonderiler = await FireStoreServisi().gonderileriGetir(widget.profilSahibiId);
+    if (mounted) {
       setState(() {
         _gonderiler = gonderiler;
         _gonderiSayisi = _gonderiler.length;
@@ -62,22 +55,93 @@ class _ProfilState extends State<Profil> {
   }
 
   _takipKontrol() async {
-    bool takipVarMi = await FireStoreServisi().takipKontrol(aktifKullaniciId: widget.aktifKullaniciId,profilSahibiId: widget.profilSahibiId);
+    bool takipVarMi = await FireStoreServisi().takipKontrol(profilSahibiId: widget.profilSahibiId, aktifKullaniciId: _aktifKullaniciId);
     setState(() {
       _takipEdildi = takipVarMi;
     });
   }
 
   @override
-  void initState() {
+  void initState() { 
     super.initState();
     _takipciSayisiGetir();
     _takipEdilenSayisiGetir();
     _gonderileriGetir();
+    _aktifKullaniciId = Provider.of<YetkilendirmeServisi>(context, listen: false).aktifKullaniciId;
     _takipKontrol();
   }
 
-  Widget _profilDetaylari(Kullanici profilData) {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Profil",style: TextStyle(color: Colors.black),),
+        backgroundColor: Colors.grey[100],
+        actions: <Widget>[
+          widget.profilSahibiId == _aktifKullaniciId ? IconButton(icon: Icon(Icons.exit_to_app, color: Colors.black,), onPressed: _cikisYap) : SizedBox(height: 0.0,)
+        ],
+        iconTheme: IconThemeData(
+          color: Colors.black
+        ),
+      ),
+      body: FutureBuilder<Object>(
+        future: FireStoreServisi().kullaniciGetir(widget.profilSahibiId),
+        builder: (context, snapshot) {
+          
+          if(!snapshot.hasData){
+            return Center(child: CircularProgressIndicator());
+          }
+
+          _profilSahibi = snapshot.data;
+
+          return ListView(
+            children: <Widget>[
+              _profilDetaylari(snapshot.data),
+              _gonderileriGoster(snapshot.data),
+            ],
+          );
+        }
+      ),
+    );
+  }
+
+  Widget _gonderileriGoster(Kullanici profilData){
+
+    if(gonderiStili == "liste"){
+      return ListView.builder(
+        shrinkWrap: true,
+        primary: false,
+        itemCount: _gonderiler.length,
+        itemBuilder: (context, index){
+          return GonderiKarti(gonderi: _gonderiler[index], yayinlayan: profilData,);
+        }
+        );
+    } else {
+      
+      List<GridTile> fayanslar = [];
+    _gonderiler.forEach((gonderi) { 
+      fayanslar.add(_fayansOlustur(gonderi));
+    });
+    
+    return GridView.count(
+      crossAxisCount: 3,
+      shrinkWrap: true,
+      mainAxisSpacing: 2.0,
+      crossAxisSpacing: 2.0,
+      childAspectRatio: 1.0,
+      physics: NeverScrollableScrollPhysics(),
+      children: fayanslar
+      );
+
+    }
+
+  }
+
+  GridTile _fayansOlustur(Gonderi gonderi){
+    return GridTile(child: Image.network(gonderi.gonderiResmiUrl, fit: BoxFit.cover,));
+  }
+
+  Widget _profilDetaylari(Kullanici profilData){
     return Padding(
       padding: const EdgeInsets.all(15.0),
       child: Column(
@@ -86,238 +150,114 @@ class _ProfilState extends State<Profil> {
           Row(
             children: <Widget>[
               CircleAvatar(
-                  backgroundColor: Colors.grey[300],
-                  radius: 50.0,
-                  backgroundImage: profilData.fotoUrl.isNotEmpty
-                      ? NetworkImage(profilData.fotoUrl)
-                      : AssetImage("assets/male.png")),
+                backgroundColor: Colors.grey[300],
+                radius: 50.0,
+                backgroundImage: profilData.fotoUrl.isNotEmpty ? NetworkImage(profilData.fotoUrl) : AssetImage("assets/images/hayalet.png"),
+              ),
               Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      _profilSayac(baslik: "Gönderiler", sayi: _gonderiSayisi),
-                      _profilSayac(baslik: "Takipçi", sayi: _takipci),
-                      _profilSayac(baslik: "Takip", sayi: _takipEdilen),
-                    ],
-                  ))
+                            child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    _sosyalSayac(baslik: "Gönderiler", sayi: _gonderiSayisi),
+                    _sosyalSayac(baslik: "Takipçi", sayi: _takipci),
+                    _sosyalSayac(baslik: "Takip", sayi: _takipEdilen),
+                  ],
+                ),
+              ),
             ],
           ),
-          SizedBox(
-            height: 10.0,
-          ),
+          SizedBox(height: 10.0,),
           Text(
             profilData.kullaniciAdi,
-            style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
+            style: TextStyle(
+            fontSize: 15.0,
+            fontWeight: FontWeight.bold
           ),
-          SizedBox(
-            height: 5.0,
-          ),
-          Text(
-            profilData.hakkinda,
-          ),
-          SizedBox(
-            height: 25.0,
-          ),
-          _profilButon()
+            ),
+            SizedBox(height: 5.0,),
+            Text(profilData.hakkinda),
+            SizedBox(height: 25.0,),
+            widget.profilSahibiId == _aktifKullaniciId ? _profiliDuzenleButon() : _takipButonu(),
         ],
       ),
     );
   }
 
-  Widget _profilButon() {
-    return widget.profilSahibiId == widget.aktifKullaniciId ? _profiliDuzenleButon() : _takipEtButon();
+  Widget _takipButonu(){
+    return _takipEdildi ? _takiptenCikButonu() : _takipEtButonu();
   }
 
-
-
-  Widget _takipEtButon() { 
-    
-    return _takipEdildi ? takiptenCikButon() : takipEtButon();
-
-  }
-
-  takiptenCikButon(){
-    return GestureDetector(
-      onTap: (){
-        FireStoreServisi().takiptenCik(profilSahibiId: widget.profilSahibiId,aktifKullaniciId: widget.aktifKullaniciId);
-        setState(() {
-          _takipci = _takipci - 1;
-          _takipEdildi = false;
-        });
-      },
-          child: Container(
-        alignment: Alignment.center,
-        height: 34.0,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5.0),
-          border: Border.all(width: 1.0, color: Colors.grey[300]),
-          color: Colors.white54,
-        ),
-        child: Text(
-          "Takipten Çık",
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-  ),
-    );
-  }
-
-  takipEtButon(){
-    return GestureDetector(
-      onTap: (){
-        setState(() {
-          _takipEdildi = true;
-          _takipci = _takipci + 1;
-        });
-        FireStoreServisi().takipEt(profilSahibiId: widget.profilSahibiId,aktifKullaniciId: widget.aktifKullaniciId);
-      },
-          child: Container(
-        alignment: Alignment.center,
-        height: 34.0,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5.0),
-          border: Border.all(width: 1.0, color: Colors.grey[300]),
-          color: Theme.of(context).primaryColor,
-        ),
-        child: Text(
-          "Takip Et",
-          style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
-        ),
-  ),
-    );
-  }
-
-  Widget _profiliDuzenleButon() {
-    return InkWell(
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>ProfiliDuzenle(profil: _profilSahibi,)));
-      },
-          child: Container(
-      alignment: Alignment.center,
+  Widget _takipEtButonu(){
+    return Container(
       width: double.infinity,
-      height: 34.0,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5.0),
-        border: Border.all(width: 1.0, color: Colors.grey[300]),
-        color: Colors.white54,
-      ),
-      child: Text(
-        "Profili Düzenle",
-        style: TextStyle(fontWeight: FontWeight.bold),
-      ),
-  ),
+      child: FlatButton(
+        color: Theme.of(context).primaryColor,
+        onPressed: (){
+          FireStoreServisi().takipEt(profilSahibiId: widget.profilSahibiId, aktifKullaniciId: _aktifKullaniciId);
+          setState(() {
+            _takipEdildi = true;
+            _takipci = _takipci + 1;
+          });
+        },
+        child: Text("Takip Et", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+        ),
     );
   }
 
-  Widget _profilSayac({String baslik, int sayi}) {
+  Widget _takiptenCikButonu(){
+    return Container(
+      width: double.infinity,
+      child: OutlineButton(
+        onPressed: (){
+          FireStoreServisi().takiptenCik(profilSahibiId: widget.profilSahibiId, aktifKullaniciId: _aktifKullaniciId);
+          setState(() {
+            _takipEdildi = false;
+            _takipci = _takipci - 1;
+          });
+        },
+        child: Text("Takipten Çık", style: TextStyle(fontWeight: FontWeight.bold)),
+        ),
+    );
+  }
+  
+
+  Widget _profiliDuzenleButon(){
+    return Container(
+      width: double.infinity,
+      child: OutlineButton(
+        onPressed: (){
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>ProfiliDuzenle(profil: _profilSahibi,)));
+        },
+        child: Text("Profili Düzenle"),
+        ),
+    );
+  }
+
+  Widget _sosyalSayac({String baslik, int sayi}){
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Text(
           sayi.toString(),
-          style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 20.0,
+            fontWeight: FontWeight.bold
+          ),
         ),
-        SizedBox(height: 2.0),
+        SizedBox(height: 2.0,),
         Text(
           baslik,
-          style: TextStyle(fontSize: 15.0),
+          style: TextStyle(
+            fontSize: 15.0,
+          ),
         ),
       ],
     );
-  }
-
-  Widget _gonderileriGoster(Kullanici profilData) {
-
-    if(gonderiStili == "liste"){
-
-      return ListView.builder(
-        shrinkWrap: true, //Anlat
-        primary: false, //Primary anlat
-        itemCount: _gonderiler.length,
-        itemBuilder: (context, index){
-          return GonderiKart(yayinlayan: profilData ,gonderi:_gonderiler[index]);
-        }
-        );
-
-    } else {
-
-
-      List<GridTile> fayanslar = [];
-      _gonderiler.forEach((gonderi){
-
-        fayanslar.add(_fayansOlustur(gonderi));
-
-      });
-      
-      return GridView.count(
-        crossAxisCount: 3,
-        shrinkWrap: true,
-        mainAxisSpacing: 2.0,
-        crossAxisSpacing: 2.0,
-        childAspectRatio: 1.0,
-        physics: NeverScrollableScrollPhysics(),
-        children: fayanslar,
-      );
-
 
   }
 
-
-  }
-
-  GridTile _fayansOlustur(gonderi){
-    
-    return GridTile(
-            child: Image(
-          image: NetworkImage(gonderi.gonderResimiUrl),
-          fit: BoxFit.cover,
-        ),
-    );
-  
-  }
-
-  cikisYap() {
+  void _cikisYap(){
     Provider.of<YetkilendirmeServisi>(context, listen: false).cikisYap();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "Profil",
-            style: TextStyle(color: Colors.black),
-          ),
-          //leading: IconButton(icon: Icon(Icons.arrow_back,color: Colors.black,), onPressed: ()=>Navigator.pop(context)), Bu şekilde kullanırsam kendi profilimde de çıkar.
-          backgroundColor: Colors.grey[100],
-          actions: <Widget>[
-            widget.aktifKullaniciId == widget.profilSahibiId ? IconButton(
-                icon: Icon(
-                  Icons.exit_to_app,
-                  color: Colors.black,
-                ),
-                onPressed: cikisYap) : SizedBox() //Sadece kendi profilinde gözükmeli.
-          ],
-          iconTheme: IconThemeData(//Geri tuşunun rengini belirledim.//Başkasının profili için
-          color: Colors.black
-        )
-        ),
-        body: FutureBuilder<Kullanici>(
-            //Editör tamamlama yapabilsin diye Kullanici tipini tanımladım.
-            future: FireStoreServisi().kullaniciGetir(widget.profilSahibiId),
-            builder: (context, snapshot) {
-              
-              if (!snapshot.hasData) {
-                return Center(child: CircularProgressIndicator());
-              }
-              _profilSahibi = snapshot.data;
-              
-              return ListView(
-                children: <Widget>[
-                  _profilDetaylari(snapshot.data),
-                  _gonderileriGoster(snapshot.data),
-                ],
-              );
-            }));
   }
 }

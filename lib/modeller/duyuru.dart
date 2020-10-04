@@ -11,7 +11,6 @@ class Duyuru {
 
   Duyuru({this.id, this.aktiviteYapanId, this.aktiviteTipi, this.gonderiId, this.gonderiFoto, this.yorum, this.olusturulmaZamani});
 
- 
   factory Duyuru.dokumandanUret(DocumentSnapshot doc) {
     return Duyuru(
       id: doc.documentID, 
@@ -23,5 +22,4 @@ class Duyuru {
       olusturulmaZamani: doc['olusturulmaZamani'],
     );
   }
-  
 }

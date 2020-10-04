@@ -14,16 +14,12 @@ class Akis extends StatefulWidget {
 
 class _AkisState extends State<Akis> {
   List<Gonderi> _gonderiler = [];
-
-
+  
   _akisGonderileriniGetir() async {
+    String aktifKullaniciId = Provider.of<YetkilendirmeServisi>(context, listen: false).aktifKullaniciId;
 
-   String aktifKullaniciId = Provider.of<YetkilendirmeServisi>(context, listen: false).aktifKullaniciId;
-
-    List<Gonderi> gonderiler =
-        await FireStoreServisi().akislariGetir(aktifKullaniciId);
-
-    if (mounted) { 
+    List<Gonderi> gonderiler = await FireStoreServisi().akisGonderileriniGetir(aktifKullaniciId);
+    if (mounted) {
       setState(() {
         _gonderiler = gonderiler;
       });
@@ -36,7 +32,6 @@ class _AkisState extends State<Akis> {
     _akisGonderileriniGetir();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,30 +40,27 @@ class _AkisState extends State<Akis> {
         centerTitle: true,
       ),
       body: ListView.builder(
-        
+        shrinkWrap: true,
+        primary: false,
         itemCount: _gonderiler.length,
         itemBuilder: (context, index){
-          
+
           Gonderi gonderi = _gonderiler[index];
 
-        return SilinmeyenFutureBuilder(
+          return SilinmeyenFutureBuilder(
             future: FireStoreServisi().kullaniciGetir(gonderi.yayinlayanId),
-            builder: (context,snapshot){
-
-              if (!snapshot.hasData) {
-                  return SizedBox();
+            builder: (context, snapshot){
+              if(!snapshot.hasData){
+                return SizedBox();
               }
-              
+
               Kullanici gonderiSahibi = snapshot.data;
 
-              return GonderiKart(yayinlayan: gonderiSahibi ,gonderi:_gonderiler[index]);
-
+              return GonderiKarti(gonderi: gonderi, yayinlayan: gonderiSahibi,);
             }
             );
-
-          
         }
-        )
+        ),
     );
   }
 }

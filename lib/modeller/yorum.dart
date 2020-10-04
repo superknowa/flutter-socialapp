@@ -10,10 +10,11 @@ class Yorum {
 
   factory Yorum.dokumandanUret(DocumentSnapshot doc) {
     return Yorum(
-      id: doc.documentID, //Bu kısmı anlat
+      id : doc.documentID,
       icerik: doc['icerik'],
       yayinlayanId: doc['yayinlayanId'],
       olusturulmaZamani: doc['olusturulmaZamani'],
     );
   }
+
 }
