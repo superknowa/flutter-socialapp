@@ -1,6 +1,6 @@
 # socialapp
 
-Sosyal medya çalışması.
+Flutter & Dart: Sıfırdan Mobil App Geliştiriciliğine kursunda yapılan sosyal medya çalışmasının kodlarıdır.
 
 ## Getting Started
 
