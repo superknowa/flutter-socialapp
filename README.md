@@ -1,4 +1,4 @@
-# socialapp
+# Socialapp Sosyal Media Uygulaması
 
 Flutter & Dart: Sıfırdan Mobil App Geliştiriciliğine kursunda yapılan sosyal medya çalışmasının kodlarıdır.
 
