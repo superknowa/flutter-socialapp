@@ -149,11 +149,11 @@ class _HesapOlusturState extends State<HesapOlustur> {
   uyariGoster({hataKodu}){
     String hataMesaji;
 
-    if(hataKodu == "ERROR_INVALID_EMAIL"){
+    if(hataKodu == "invalid-email"){
       hataMesaji = "Girdiğiniz mail adresi geçersizdir";
-    } else if (hataKodu == "ERROR_EMAIL_ALREADY_IN_USE") {
+    } else if (hataKodu == "email-already-in-use") {
       hataMesaji = "Girdiğiniz mail kayıtlıdır";
-    } else if (hataKodu == "ERROR_WEAK_PASSWORD") {
+    } else if (hataKodu == "weak-password") {
       hataMesaji = "Daha zor bir şifre tercih edin";
     }
 

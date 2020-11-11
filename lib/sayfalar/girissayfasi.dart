@@ -208,13 +208,13 @@ class _GirisSayfasiState extends State<GirisSayfasi> {
   uyariGoster({hataKodu}){
     String hataMesaji;
 
-    if (hataKodu == "ERROR_USER_NOT_FOUND") {
+    if (hataKodu == "user-not-found") {
       hataMesaji = "Böyle bir kullanıcı bulunmuyor";
-    } else if (hataKodu == "ERROR_INVALID_EMAIL") {
+    } else if (hataKodu == "invalid-email") {
       hataMesaji = "Girdiğiniz mail adresi geçersizdir";
-    } else if (hataKodu == "ERROR_WRONG_PASSWORD") {
+    } else if (hataKodu == "wrong-password") {
       hataMesaji = "Girilen şifre hatalı";
-    } else if (hataKodu == "ERROR_USER_DISABLED") {
+    } else if (hataKodu == "user-disabled") {
       hataMesaji = "Kullanıcı engellenmiş";
     } else {
       hataMesaji = "Tanımlanamayan bir hata oluştu $hataKodu";
