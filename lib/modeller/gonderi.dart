@@ -11,13 +11,14 @@ class Gonderi {
   Gonderi({this.id, this.gonderiResmiUrl, this.aciklama, this.yayinlayanId, this.begeniSayisi, this.konum});
 
   factory Gonderi.dokumandanUret(DocumentSnapshot doc) {
+    var docData = doc.data();
     return Gonderi(
-      id : doc.documentID,
-      gonderiResmiUrl: doc['gonderiResmiUrl'],
-      aciklama: doc['aciklama'],
-      yayinlayanId: doc['yayinlayanId'],
-      begeniSayisi: doc['begeniSayisi'],
-      konum: doc['konum'],
+      id : doc.id,
+      gonderiResmiUrl: docData['gonderiResmiUrl'],
+      aciklama: docData['aciklama'],
+      yayinlayanId: docData['yayinlayanId'],
+      begeniSayisi: docData['begeniSayisi'],
+      konum: docData['konum'],
     );
   }
 

@@ -55,9 +55,9 @@ class _YorumlarState extends State<Yorumlar> {
           }
 
           return ListView.builder(
-            itemCount: snapshot.data.documents.length,
+            itemCount: snapshot.data.docs.length,
             itemBuilder: (context, index){
-              Yorum yorum = Yorum.dokumandanUret(snapshot.data.documents[index]);
+              Yorum yorum = Yorum.dokumandanUret(snapshot.data.docs[index]);
               return _yorumSatiri(yorum);
             }
             );

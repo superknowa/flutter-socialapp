@@ -12,14 +12,15 @@ class Duyuru {
   Duyuru({this.id, this.aktiviteYapanId, this.aktiviteTipi, this.gonderiId, this.gonderiFoto, this.yorum, this.olusturulmaZamani});
 
   factory Duyuru.dokumandanUret(DocumentSnapshot doc) {
+    var docData = doc.data();
     return Duyuru(
-      id: doc.documentID, 
-      aktiviteYapanId: doc['aktiviteYapanId'],
-      aktiviteTipi: doc['aktiviteTipi'],
-      gonderiId: doc['gonderiId'],
-      gonderiFoto: doc['gonderiFoto'],
-      yorum: doc['yorum'],
-      olusturulmaZamani: doc['olusturulmaZamani'],
+      id: doc.id, 
+      aktiviteYapanId: docData['aktiviteYapanId'],
+      aktiviteTipi: docData['aktiviteTipi'],
+      gonderiId: docData['gonderiId'],
+      gonderiFoto: docData['gonderiFoto'],
+      yorum: docData['yorum'],
+      olusturulmaZamani: docData['olusturulmaZamani'],
     );
   }
 }

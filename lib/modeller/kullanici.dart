@@ -13,23 +13,24 @@ class Kullanici {
   Kullanici({@required this.id, this.kullaniciAdi, this.fotoUrl, this.email,  this.hakkinda});
 
 
-  factory Kullanici.firebasedenUret(FirebaseUser kullanici) {
+  factory Kullanici.firebasedenUret(User kullanici) {
     return Kullanici(
       id: kullanici.uid,
       kullaniciAdi: kullanici.displayName,
-      fotoUrl: kullanici.photoUrl,
+      fotoUrl: kullanici.photoURL,
       email: kullanici.email,
     );
   }
 
 
   factory Kullanici.dokumandanUret(DocumentSnapshot doc) {
+    var docData = doc.data();
     return Kullanici(
-      id : doc.documentID,
-      kullaniciAdi: doc['kullaniciAdi'],
-      email: doc['email'],
-      fotoUrl: doc['fotoUrl'],
-      hakkinda: doc['hakkinda'],
+      id : doc.id,
+      kullaniciAdi: docData['kullaniciAdi'],
+      email: docData['email'],
+      fotoUrl: docData['fotoUrl'],
+      hakkinda: docData['hakkinda'],
     );
   }
 

@@ -6,12 +6,12 @@ class YetkilendirmeServisi {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   String aktifKullaniciId;
 
-  Kullanici _kullaniciOlustur(FirebaseUser kullanici) {
+  Kullanici _kullaniciOlustur(User kullanici) {
     return kullanici == null ? null : Kullanici.firebasedenUret(kullanici);
   }
 
   Stream<Kullanici> get durumTakipcisi {
-    return _firebaseAuth.onAuthStateChanged.map(_kullaniciOlustur);
+    return _firebaseAuth.authStateChanges().map(_kullaniciOlustur);
   }
 
   Future<Kullanici> mailIleKayit(String eposta, String sifre) async {
@@ -35,8 +35,8 @@ class YetkilendirmeServisi {
   Future<Kullanici> googleIleGiris() async {
     GoogleSignInAccount googleHesabi = await GoogleSignIn().signIn();
     GoogleSignInAuthentication googleYetkiKartim = await googleHesabi.authentication;
-    AuthCredential sifresizGirisBelgesi = GoogleAuthProvider.getCredential(idToken: googleYetkiKartim.idToken, accessToken: googleYetkiKartim.accessToken);
-    AuthResult girisKarti = await _firebaseAuth.signInWithCredential(sifresizGirisBelgesi);
+    AuthCredential sifresizGirisBelgesi = GoogleAuthProvider.credential(idToken: googleYetkiKartim.idToken, accessToken: googleYetkiKartim.accessToken);
+    UserCredential girisKarti = await _firebaseAuth.signInWithCredential(sifresizGirisBelgesi);
     return _kullaniciOlustur(girisKarti.user);
   }
   

@@ -55,11 +55,11 @@ class _AnaSayfaState extends State<AnaSayfa> {
         selectedItemColor: Theme.of(context).primaryColor,
         unselectedItemColor: Colors.grey[600],
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), title: Text("Akış")),
-          BottomNavigationBarItem(icon: Icon(Icons.explore), title: Text("Keşfet")),
-          BottomNavigationBarItem(icon: Icon(Icons.file_upload), title: Text("Yükle")),
-          BottomNavigationBarItem(icon: Icon(Icons.notifications), title: Text("Duyurular")),
-          BottomNavigationBarItem(icon: Icon(Icons.person), title: Text("Profil")),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Akış"),
+          BottomNavigationBarItem(icon: Icon(Icons.explore), label: "Keşfet"),
+          BottomNavigationBarItem(icon: Icon(Icons.file_upload), label: "Yükle"),
+          BottomNavigationBarItem(icon: Icon(Icons.notifications), label: "Duyurular"),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profil"),
         ],
         onTap: (secilenSayfaNo){
           setState(() {

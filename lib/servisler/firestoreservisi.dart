@@ -104,7 +104,7 @@ class FireStoreServisi {
   }
 
   Future<List<Duyuru>> duyurulariGetir(String profilSahibiId) async {
-    QuerySnapshot snapshot = await _firestore.collection("duyurular").doc(profilSahibiId).collection("kullanicininDuyurulari").orderBy("olusturulmaZamani", descending: true).limit(20).getDocuments();
+    QuerySnapshot snapshot = await _firestore.collection("duyurular").doc(profilSahibiId).collection("kullanicininDuyurulari").orderBy("olusturulmaZamani", descending: true).limit(20).get();
     
     List<Duyuru> duyurular = [];
 
@@ -129,35 +129,35 @@ class FireStoreServisi {
   }
 
   Future<List<Gonderi>> gonderileriGetir(kullaniciId) async {
-    QuerySnapshot snapshot = await _firestore.collection("gonderiler").doc(kullaniciId).collection("kullaniciGonderileri").orderBy("olusturulmaZamani", descending: true).getDocuments();
-    List<Gonderi> gonderiler = snapshot.documents.map((doc) => Gonderi.dokumandanUret(doc)).toList();
+    QuerySnapshot snapshot = await _firestore.collection("gonderiler").doc(kullaniciId).collection("kullaniciGonderileri").orderBy("olusturulmaZamani", descending: true).get();
+    List<Gonderi> gonderiler = snapshot.docs.map((doc) => Gonderi.dokumandanUret(doc)).toList();
     return gonderiler;
   }
 
   Future<List<Gonderi>> akisGonderileriniGetir(kullaniciId) async {
-    QuerySnapshot snapshot = await _firestore.collection("akislar").document(kullaniciId).collection("kullaniciAkisGonderileri").orderBy("olusturulmaZamani", descending: true).getDocuments();
-    List<Gonderi> gonderiler = snapshot.documents.map((doc) => Gonderi.dokumandanUret(doc)).toList();
+    QuerySnapshot snapshot = await _firestore.collection("akislar").doc(kullaniciId).collection("kullaniciAkisGonderileri").orderBy("olusturulmaZamani", descending: true).get();
+    List<Gonderi> gonderiler = snapshot.docs.map((doc) => Gonderi.dokumandanUret(doc)).toList();
     return gonderiler;
   }
 
   Future<void> gonderiSil({String aktifKullaniciId, Gonderi gonderi}) async {
-    _firestore.collection("gonderiler").document(aktifKullaniciId).collection("kullaniciGonderileri").document(gonderi.id).get().then((DocumentSnapshot doc){
+    _firestore.collection("gonderiler").doc(aktifKullaniciId).collection("kullaniciGonderileri").doc(gonderi.id).get().then((DocumentSnapshot doc){
       if(doc.exists){
         doc.reference.delete();
       }
     });
 
     //Gönderiye ait yorumları siliyoruz
-    QuerySnapshot yorumlarSnapshot = await _firestore.collection("yorumlar").document(gonderi.id).collection("gonderiYorumlari").getDocuments();
-    yorumlarSnapshot.documents.forEach((DocumentSnapshot doc) {
+    QuerySnapshot yorumlarSnapshot = await _firestore.collection("yorumlar").doc(gonderi.id).collection("gonderiYorumlari").get();
+    yorumlarSnapshot.docs.forEach((DocumentSnapshot doc) {
       if(doc.exists){
         doc.reference.delete();
       }
      });
 
      //Silinen gönderiyle ilgili duyuruları silelim
-     QuerySnapshot duyurularSnapshot = await _firestore.collection("duyurular").document(gonderi.yayinlayanId).collection("kullanicininDuyurulari").where("gonderiId", isEqualTo: gonderi.id).getDocuments();
-     duyurularSnapshot.documents.forEach((DocumentSnapshot doc) {
+     QuerySnapshot duyurularSnapshot = await _firestore.collection("duyurular").doc(gonderi.yayinlayanId).collection("kullanicininDuyurulari").where("gonderiId", isEqualTo: gonderi.id).get();
+     duyurularSnapshot.docs.forEach((DocumentSnapshot doc) {
       if(doc.exists){
         doc.reference.delete();
       }
@@ -169,24 +169,24 @@ class FireStoreServisi {
   }
 
   Future<Gonderi> tekliGonderiGetir(String gonderiId, String gonderiSahibiId) async {
-    DocumentSnapshot doc = await _firestore.collection("gonderiler").document(gonderiSahibiId).collection("kullaniciGonderileri").document(gonderiId).get();
+    DocumentSnapshot doc = await _firestore.collection("gonderiler").doc(gonderiSahibiId).collection("kullaniciGonderileri").doc(gonderiId).get();
     Gonderi gonderi = Gonderi.dokumandanUret(doc);
     return gonderi;
   }
 
   Future<void> gonderiBegen(Gonderi gonderi, String aktifKullaniciId) async {
-    DocumentReference docRef = _firestore.collection("gonderiler").document(gonderi.yayinlayanId).collection("kullaniciGonderileri").document(gonderi.id);
+    DocumentReference docRef = _firestore.collection("gonderiler").doc(gonderi.yayinlayanId).collection("kullaniciGonderileri").doc(gonderi.id);
     DocumentSnapshot doc = await docRef.get();
 
     if(doc.exists){
       Gonderi gonderi = Gonderi.dokumandanUret(doc);
       int yeniBegeniSayisi = gonderi.begeniSayisi + 1;
-      docRef.updateData({
+      docRef.update({
         "begeniSayisi": yeniBegeniSayisi
       });
 
       //Kullanıcı-Gönderi İlişkisini Beğeniler Koleksiyonuna Ekle
-      _firestore.collection("begeniler").document(gonderi.id).collection("gonderiBegenileri").document(aktifKullaniciId).setData({});
+      _firestore.collection("begeniler").doc(gonderi.id).collection("gonderiBegenileri").doc(aktifKullaniciId).set({});
 
       //Beğeni haberini gönderi sahibine iletiyoruz.
       duyuruEkle(
@@ -199,18 +199,18 @@ class FireStoreServisi {
   }
 
   Future<void> gonderiBegeniKaldir(Gonderi gonderi, String aktifKullaniciId) async {
-    DocumentReference docRef = _firestore.collection("gonderiler").document(gonderi.yayinlayanId).collection("kullaniciGonderileri").document(gonderi.id);
+    DocumentReference docRef = _firestore.collection("gonderiler").doc(gonderi.yayinlayanId).collection("kullaniciGonderileri").doc(gonderi.id);
     DocumentSnapshot doc = await docRef.get();
 
     if(doc.exists){
       Gonderi gonderi = Gonderi.dokumandanUret(doc);
       int yeniBegeniSayisi = gonderi.begeniSayisi - 1;
-      docRef.updateData({
+      docRef.update({
         "begeniSayisi": yeniBegeniSayisi
       });
 
       //Kullanıcı-Gönderi İlişkisini Beğeniler Koleksiyonundan Sil
-      DocumentSnapshot docBegeni = await _firestore.collection("begeniler").document(gonderi.id).collection("gonderiBegenileri").document(aktifKullaniciId).get();
+      DocumentSnapshot docBegeni = await _firestore.collection("begeniler").doc(gonderi.id).collection("gonderiBegenileri").doc(aktifKullaniciId).get();
 
       if(docBegeni.exists){
         docBegeni.reference.delete();
@@ -220,7 +220,7 @@ class FireStoreServisi {
 
   Future<bool> begeniVarmi(Gonderi gonderi, String aktifKullaniciId) async {
 
-    DocumentSnapshot docBegeni = await _firestore.collection("begeniler").document(gonderi.id).collection("gonderiBegenileri").document(aktifKullaniciId).get();
+    DocumentSnapshot docBegeni = await _firestore.collection("begeniler").doc(gonderi.id).collection("gonderiBegenileri").doc(aktifKullaniciId).get();
 
     if(docBegeni.exists){
       return true;
@@ -231,11 +231,11 @@ class FireStoreServisi {
   }
 
   Stream<QuerySnapshot> yorumlariGetir(String gonderiId){
-    return _firestore.collection("yorumlar").document(gonderiId).collection("gonderiYorumlari").orderBy("olusturulmaZamani", descending: true).snapshots();
+    return _firestore.collection("yorumlar").doc(gonderiId).collection("gonderiYorumlari").orderBy("olusturulmaZamani", descending: true).snapshots();
   }
 
   void yorumEkle({String aktifKullaniciId, Gonderi gonderi, String icerik}){
-    _firestore.collection("yorumlar").document(gonderi.id).collection("gonderiYorumlari").add({
+    _firestore.collection("yorumlar").doc(gonderi.id).collection("gonderiYorumlari").add({
       "icerik": icerik,
       "yayinlayanId": aktifKullaniciId,
       "olusturulmaZamani": zaman,
