@@ -32,7 +32,7 @@ dependencies:
   firebase_auth:
   provider:
   google_sign_in:
-  image_picker:
+  image_picker: ^0.6.7+4
   firebase_storage:
   uuid:
   timeago:
